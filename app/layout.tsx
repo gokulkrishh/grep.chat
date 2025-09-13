@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import { cookies } from "next/headers"
+
+import { AppSidebar } from "@/components/app-sidebar"
+import { ThemeProvider } from "@/components/contexts/theme-provider"
+import Header from "@/components/header"
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 import "./globals.css"
 
@@ -33,26 +39,37 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  colorScheme: 'light dark',
+  colorScheme: "light dark",
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
 }
- 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <div className="flex h-dvh w-full">
+              <AppSidebar />
+              {children}
+            </div>
+          </SidebarProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

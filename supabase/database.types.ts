@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -19,7 +13,6 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
-          is_shared: boolean | null
           share_created_at: string | null
           share_token: string | null
           title: string | null
@@ -29,7 +22,6 @@ export type Database = {
           created_at?: string
           created_by: string
           id?: string
-          is_shared?: boolean | null
           share_created_at?: string | null
           share_token?: string | null
           title?: string | null
@@ -39,21 +31,12 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
-          is_shared?: boolean | null
           share_created_at?: string | null
           share_token?: string | null
           title?: string | null
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "chats_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       messages: {
         Row: {
@@ -97,13 +80,6 @@ export type Database = {
             referencedRelation: "chats"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "messages_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       users: {
@@ -113,6 +89,7 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          metadata: Json | null
           updated_at: string | null
         }
         Insert: {
@@ -121,6 +98,7 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          metadata?: Json | null
           updated_at?: string | null
         }
         Update: {
@@ -129,6 +107,7 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
+          metadata?: Json | null
           updated_at?: string | null
         }
         Relationships: []
@@ -172,10 +151,8 @@ export type Tables<
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R

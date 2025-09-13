@@ -1,12 +1,12 @@
-import type { MetadataRoute } from 'next'
- 
+import type { MetadataRoute } from "next"
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://grep.chat',
+      url: "https://grep.chat",
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: "yearly",
       priority: 1,
-    }
+    },
   ]
 }
