@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "./globals.css"
@@ -30,17 +30,20 @@ export const metadata: Metadata = {
       url: "/favicon-dark.svg",
     },
   ],
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  colorScheme: 'light dark',
   themeColor: [
-    {
-      media: "(prefers-color-scheme: light)",
-      color: "#ffffff",
-    },
-    {
-      media: "(prefers-color-scheme: dark)",
-      color: "#000000",
-    },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
   ],
 }
+ 
 
 export default function RootLayout({
   children,
@@ -48,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   )
