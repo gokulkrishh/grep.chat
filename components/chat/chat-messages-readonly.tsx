@@ -16,7 +16,7 @@ export default function ChatMessagesReadonly({ messages }: Props) {
   }
 
   return (
-    <div className="relative mx-auto flex h-full w-full flex-col gap-8 overflow-y-auto">
+    <div className="relative mx-auto flex h-full w-full flex-col gap-8 overflow-hidden">
       <ChatContainerRoot className="flex-1">
         <ChatContainerContent className="space-y-6 p-4 pb-20">
           <p className="text-muted-foreground text-center text-sm max-sm:mt-12">
