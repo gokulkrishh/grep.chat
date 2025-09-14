@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+
 import { NewChatIcon, SearchIcon } from "../icons"
 import {
   SidebarGroup,
@@ -12,7 +14,7 @@ import {
 } from "../ui/sidebar"
 
 export default function AppSidebarHeader() {
-  const { isMobile } = useSidebar()
+  const isMobile = useIsMobile()
 
   return (
     <>
@@ -25,7 +27,8 @@ export default function AppSidebarHeader() {
 }
 
 export function SidebarHeaderActions() {
-  const { isMobile, toggleSidebar } = useSidebar()
+  const isMobile = useIsMobile()
+  const { toggleSidebar } = useSidebar()
 
   const handleClick = () => {
     if (isMobile) {

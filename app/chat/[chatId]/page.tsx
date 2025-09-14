@@ -3,7 +3,6 @@ import { Suspense } from "react"
 import { getMessagesByChatId } from "@/actions/messages"
 import ChatContainer from "@/components/chat/chat-container"
 import ChatSkeleton from "@/components/chat/chat-skeleton"
-import Header from "@/components/header"
 
 type ChatPageProps = {
   params: { chatId: string }
@@ -20,7 +19,6 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   return (
     <Suspense fallback={<ChatSkeleton key={"chatId"} />}>
-      <Header />
       <Messages chatId={chatId} />
     </Suspense>
   )

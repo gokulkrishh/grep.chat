@@ -18,7 +18,8 @@ export default async function Header() {
         {user ? <SidebarTrigger /> : <div />}
 
         <div className="flex h-full max-w-fit items-center gap-4">
-          {!user ? <SignIn /> : <ChatShare />}
+          {!user && <SignIn />}
+          {user && <ChatShare />}
         </div>
       </header>
     </Suspense>

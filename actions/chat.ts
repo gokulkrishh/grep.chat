@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { createClient } from "@/lib/supabase/server"
 
-export const ensureChat = async (id: string, title: string) => {
+export const ensureChat = async (id: string, title?: string) => {
   const supabase = await createClient()
 
   const {
@@ -28,7 +28,11 @@ export const ensureChat = async (id: string, title: string) => {
     return existingChat
   }
 
-  await supabase.from("chats").insert({ id, title, created_by: user.id }).select("id").single()
+  await supabase
+    .from("chats")
+    .insert({ id, title: title ?? "New Chat", created_by: user.id })
+    .select("id")
+    .single()
 }
 
 export const deleteChat = async (id: string) => {

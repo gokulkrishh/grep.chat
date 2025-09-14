@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 
 import { UIMessage } from "ai"
 
+import { getMessagesCache, setMessagesCache } from "@/lib/redis/cache"
 import { createClient } from "@/lib/supabase/server"
 
 export const getMessagesByChatId = async (chatId: string) => {
@@ -16,6 +17,12 @@ export const getMessagesByChatId = async (chatId: string) => {
     redirect("/")
   }
 
+  const cachedMessages = await getMessagesCache(chatId)
+
+  if (cachedMessages) {
+    return cachedMessages
+  }
+
   const { data, error } = await supabase
     .from("messages")
     .select("*")
@@ -26,7 +33,11 @@ export const getMessagesByChatId = async (chatId: string) => {
     throw new Error(error.message)
   }
 
-  const messages = data ?? []
+  const messages = (data ?? []) as unknown as UIMessage[]
 
-  return messages as unknown as UIMessage[]
+  if (messages.length > 0) {
+    await setMessagesCache(chatId, messages)
+  }
+
+  return messages
 }

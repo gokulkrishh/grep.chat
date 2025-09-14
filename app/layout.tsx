@@ -5,6 +5,7 @@ import { cookies } from "next/headers"
 
 import ChatsProvider from "@/components/contexts/chats-provider"
 import { ThemeProvider } from "@/components/contexts/theme-provider"
+import Header from "@/components/header"
 import { AppSidebar } from "@/components/sidebar/sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 
@@ -65,14 +66,16 @@ export default async function RootLayout({
         <ThemeProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <ChatsProvider>
-              <div className="flex h-dvh w-full">
+              <div className="flex h-full w-full">
                 <AppSidebar />
-                {children}
+                <div className="relative flex h-dvh w-full flex-col overflow-hidden">
+                  <Header />
+                  {children}
+                </div>
               </div>
             </ChatsProvider>
           </SidebarProvider>
         </ThemeProvider>
-
         <Analytics />
       </body>
     </html>

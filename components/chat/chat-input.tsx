@@ -2,10 +2,10 @@
 
 import { useRef, useState } from "react"
 
-import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
 
+import { useChats } from "../contexts/chats-provider"
 import { ArrowUpIcon, GlobeIcon, PaperClipIcon, SquareIcon } from "../icons"
 import { PromptInput, PromptInputActions, PromptInputTextarea } from "../prompt-kit/prompt-input"
 import { PromptInputAction } from "../prompt-kit/prompt-input"
@@ -27,6 +27,7 @@ export default function ChatInput({
   const isStreaming = props.status === "streaming"
   const isSubmitted = props.status === "submitted"
   const isLoading = isStreaming || isSubmitted
+  const { refreshChats } = useChats()
 
   const handleValueChange = (value: string) => {
     setText(value)
@@ -52,9 +53,9 @@ export default function ChatInput({
         { role: "user", parts: [{ type: "text", text }] },
         { body: { reasoning: props.reasoning, webSearch, model: props.model, id: props.id } },
       )
-      await ensureChat(props.id, text.slice(0, 20))
       redirectToChat(props.id)
     } finally {
+      refreshChats()
       setFiles([])
     }
   }

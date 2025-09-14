@@ -11,8 +11,10 @@ import {
 } from "ai"
 import { v4 as uuidv4 } from "uuid"
 
+import { ensureChat } from "@/actions/chat"
 import { systemPrompt } from "@/data/prompt"
 import { Reasoning, autoModel } from "@/hooks/use-chat"
+import { invalidateMessagesCache } from "@/lib/redis/cache"
 import { createClient } from "@/lib/supabase/server"
 import { Database, Json } from "@/supabase/database.types"
 
@@ -78,6 +80,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "chatId is missing" }, { status: 400 })
     }
 
+    // Ensure chat exists or new chat is created with a title
+    const title = message.parts[0].type === "text" ? message.parts[0].text : ""
+    await ensureChat(chatId, title)
+
     if (trigger === "regenerate-message") {
       if (!messageIdToDelete) {
         return NextResponse.json({ error: "messageIdToDelete is missing" }, { status: 400 })
@@ -92,6 +98,8 @@ export async function POST(request: Request) {
       if (deleteError) {
         throw new Error(deleteError.message)
       }
+
+      await invalidateMessagesCache(chatId)
     }
 
     const { data: previousMessages, error: selectError } = await supabase
@@ -116,6 +124,8 @@ export async function POST(request: Request) {
       if (insertError) {
         throw new Error(insertError.message)
       }
+
+      await invalidateMessagesCache(chatId)
     }
 
     const validatedMessages = await validateUIMessages({
@@ -176,6 +186,8 @@ export async function POST(request: Request) {
         if (error) {
           throw new Error(error.message)
         }
+
+        await invalidateMessagesCache(chatId)
       },
       messageMetadata: ({ part }) => {
         if (part.type === "start") {
