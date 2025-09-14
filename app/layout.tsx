@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { cookies } from "next/headers"
 
-import { AppSidebar } from "@/components/app-sidebar"
+import ChatsProvider from "@/components/contexts/chats-provider"
 import { ThemeProvider } from "@/components/contexts/theme-provider"
-import Header from "@/components/header"
+import { AppSidebar } from "@/components/sidebar/sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 
 import "./globals.css"
@@ -63,10 +63,12 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
-            <div className="flex h-dvh w-full">
-              <AppSidebar />
-              {children}
-            </div>
+            <ChatsProvider>
+              <div className="flex h-dvh w-full">
+                <AppSidebar />
+                {children}
+              </div>
+            </ChatsProvider>
           </SidebarProvider>
         </ThemeProvider>
       </body>
