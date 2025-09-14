@@ -1,10 +1,13 @@
+import ChatContainer from "@/components/chat/chat-container"
 import Header from "@/components/header"
 
 export default function Home() {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       <Header />
-      <main className="mx-auto flex h-dvh w-full flex-col items-center justify-center"></main>
+      <main className="mx-auto flex h-dvh w-full flex-col items-center justify-center">
+        <ChatContainer />
+      </main>
     </div>
   )
 }

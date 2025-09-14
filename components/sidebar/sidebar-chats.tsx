@@ -26,32 +26,34 @@ export const SidebarChats = () => {
   const router = useRouter()
   const chatId = usePathname()?.split?.("/chat/")?.[1]
   const { isMobile, toggleSidebar } = useSidebar()
-  const [show, setShow] = useState<string | undefined>(undefined)
+  const [open, setOpen] = useState<boolean>(false)
+  const [deletedChatId, setDeletedChatId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { chats, refreshChats } = useChats()
 
-  const handleDelete = async (id: string | undefined) => {
-    if (!id) return
+  const handleDelete = async () => {
+    if (!deletedChatId) return
 
     try {
       setIsLoading(true)
-      await deleteChat(id)
+      await deleteChat(deletedChatId)
     } finally {
-      setShow(undefined)
       refreshChats()
-      router.push("/")
+      setOpen(false)
+      setDeletedChatId(null)
       setIsLoading(false)
+      router.push("/")
     }
   }
 
-  const deletedChat = chats?.find((c) => c.id === show)
+  const deletedChat = chats?.find((c) => c.id === deletedChatId)
   const currentChatData = chats?.find((c) => c.id === chatId)
 
   useEffect(() => {
     if (currentChatData?.title && chatId) {
       document.title = `${currentChatData?.title} - grep.chat`
     }
-  }, [currentChatData, chatId])
+  }, [currentChatData?.title, chatId])
 
   return (
     <div className="flex flex-col gap-0.25">
@@ -81,7 +83,8 @@ export const SidebarChats = () => {
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  setShow(chat.id)
+                  setOpen(true)
+                  setDeletedChatId(chat.id)
                 }}
               >
                 <TrashIcon className="size-4" />
@@ -91,10 +94,8 @@ export const SidebarChats = () => {
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
-      <AlertDialog
-        open={!!show}
-        onOpenChange={(open) => setShow(open ? currentChatData?.id : undefined)}
-      >
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-left">Delete chat?</AlertDialogTitle>
@@ -106,7 +107,7 @@ export const SidebarChats = () => {
             <Button
               variant="secondary"
               className="w-fit rounded-full"
-              onClick={() => setShow(undefined)}
+              onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
@@ -115,7 +116,7 @@ export const SidebarChats = () => {
               variant="destructive"
               className="w-fit rounded-full"
               onClick={() => {
-                handleDelete(currentChatData?.id)
+                handleDelete()
               }}
             >
               {isLoading ? <Loader /> : null}

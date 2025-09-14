@@ -21,11 +21,12 @@ const ChatsContext = createContext<Context>({
 })
 
 const ChatsProvider = ({ children }: { children: React.ReactNode }) => {
-  const supabase = createClient()
   const [chats, setChats] = useState<Chats>([])
-  const user = supabase.auth.getUser()
 
   const fetchChats = useCallback(async () => {
+    const supabase = createClient()
+    const user = supabase.auth.getUser()
+
     if (!user) {
       return
     }
@@ -33,13 +34,11 @@ const ChatsProvider = ({ children }: { children: React.ReactNode }) => {
     const chats = await getChats()
 
     setChats(chats)
-  }, [user])
+  }, [])
 
   useEffect(() => {
-    if (!chats.length) {
-      fetchChats()
-    }
-  }, [chats.length, fetchChats])
+    fetchChats()
+  }, [fetchChats])
 
   return (
     <ChatsContext.Provider value={{ chats, setChats, refreshChats: fetchChats }}>
