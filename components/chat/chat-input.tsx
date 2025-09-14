@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react"
 
+import { usePathname } from "next/navigation"
+
 import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -21,14 +23,17 @@ export default function ChatInput({
   webSearch,
   ...props
 }: UseChatReturnType) {
+  const pathname = usePathname()
   const isMobile = useIsMobile()
   const [text, setText] = useState("")
   const [files, setFiles] = useState<File[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { refreshChats } = useChats()
+
+  const isHomePath = pathname === "/"
   const isStreaming = props.status === "streaming"
   const isSubmitted = props.status === "submitted"
   const isLoading = isStreaming || isSubmitted
-  const { refreshChats } = useChats()
 
   const handleValueChange = (value: string) => {
     setText(value)
@@ -50,14 +55,22 @@ export default function ChatInput({
 
     try {
       setText("")
+
+      const chatId = props.id
+
       sendMessage(
         { role: "user", parts: [{ type: "text", text }] },
-        { body: { reasoning: props.reasoning, webSearch, model: props.model, id: props.id } },
+        { body: { reasoning: props.reasoning, webSearch, model: props.model, id: chatId } },
       )
-      await ensureChat(props.id, text.slice(0, 20))
-      redirectToChat(props.id)
+
+      if (isHomePath) {
+        await ensureChat(chatId, text?.slice(0, 40))
+        redirectToChat(chatId)
+        refreshChats()
+      }
+    } catch (error) {
+      console.log("Error while submitting message", error)
     } finally {
-      refreshChats()
       setFiles([])
     }
   }

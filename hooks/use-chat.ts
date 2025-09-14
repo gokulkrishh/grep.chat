@@ -22,6 +22,7 @@ export const useChat = ({ id, initialMessages }: Props) => {
   const [reasoning, setReasoning] = useState<Reasoning>(null)
 
   const chat = useAiSdkChat({
+    id: chatId,
     messages: initialMessages,
     generateId: () => uuidv4(),
     transport: new DefaultChatTransport({

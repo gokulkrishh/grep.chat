@@ -2,7 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 
-import { getChats } from "@/actions/chats"
 import { createClient } from "@/lib/supabase/client"
 import { Database } from "@/supabase/database.types"
 
@@ -25,15 +24,22 @@ const ChatsProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchChats = useCallback(async () => {
     const supabase = createClient()
-    const user = supabase.auth.getUser()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
     if (!user) {
       return
     }
 
-    const chats = await getChats()
+    const { data: chats } = await supabase
+      .from("chats")
+      .select("id,title")
+      .eq("created_by", user.id)
+      .order("created_at", { ascending: false })
 
-    setChats(chats)
+    setChats((chats ?? []) as unknown as Chats)
   }, [])
 
   useEffect(() => {

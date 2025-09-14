@@ -67,7 +67,7 @@ export const SidebarChats = () => {
           })}
           key={chat.id}
         >
-          <SidebarMenuButton className="w-full truncate pr-1" asChild>
+          <SidebarMenuButton className="inline-flex w-full pr-2" asChild>
             <Link
               prefetch={index < 5}
               onClick={() => {
@@ -77,7 +77,7 @@ export const SidebarChats = () => {
               }}
               href={`/chat/${chat.id}`}
             >
-              <span className="flex w-full truncate pr-2">{chat.title?.slice(0, 40)}</span>
+              <span className="block w-full truncate">{chat.title}</span>
 
               <TooltipWrapper delayDuration={2000} side="right" tooltip="Delete chat">
                 <Button

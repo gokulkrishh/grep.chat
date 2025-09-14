@@ -11,7 +11,6 @@ import {
 } from "ai"
 import { v4 as uuidv4 } from "uuid"
 
-import { ensureChat } from "@/actions/chat"
 import { systemPrompt } from "@/data/prompt"
 import { Reasoning, autoModel } from "@/hooks/use-chat"
 import { invalidateMessagesCache } from "@/lib/redis/cache"
@@ -52,7 +51,7 @@ type RequestBody = {
   model: string
   reasoning: Reasoning
   webSearch: boolean
-  regenerateMessageId?: string
+  messageIdToDelete?: string
 }
 
 export async function POST(request: Request) {
@@ -65,7 +64,7 @@ export async function POST(request: Request) {
       model,
       reasoning,
       webSearch,
-      regenerateMessageId,
+      messageIdToDelete,
     }: RequestBody = await request.json()
 
     const {
@@ -83,14 +82,14 @@ export async function POST(request: Request) {
     const cacheId = `${chatId}${user.id}`
 
     if (trigger === "regenerate-message") {
-      if (!regenerateMessageId) {
-        return NextResponse.json({ error: "regenerateMessageId is missing" }, { status: 400 })
+      if (!messageIdToDelete) {
+        return NextResponse.json({ error: "messageIdToDelete is missing" }, { status: 400 })
       }
 
       const { error: deleteError } = await supabase
         .from("messages")
         .delete()
-        .eq("id", regenerateMessageId)
+        .eq("id", messageIdToDelete)
         .eq("chat_id", chatId)
 
       if (deleteError) {

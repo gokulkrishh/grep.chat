@@ -25,7 +25,7 @@ export const ensureChat = async (id: string, title?: string) => {
     .single()
 
   if (existingChat) {
-    return existingChat
+    return
   }
 
   await supabase
