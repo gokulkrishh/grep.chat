@@ -140,12 +140,12 @@ export default function ChatShare() {
             <AnimatePresence mode="popLayout">
               <motion.div
                 className="my-4 flex w-full items-center gap-4"
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={false}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="border-input dark:bg-accent flex w-full items-center gap-2 rounded-full border p-2 pl-2">
+                <div className="border-input dark:bg-accent flex w-full items-center gap-2 rounded-full border p-1 pl-2">
                   <input
                     type="text"
                     value={`${baseUrl}/share/${shareToken ?? ""}`}
@@ -156,7 +156,7 @@ export default function ChatShare() {
                   />
 
                   <form onSubmit={handleShare}>
-                    <Button size="lg" className="rounded-full font-semibold" type="submit">
+                    <Button className="rounded-full font-semibold" type="submit">
                       {isCopied ? (
                         <>
                           <ClipboardIcon /> Copied
@@ -180,9 +180,9 @@ export default function ChatShare() {
                   </form>
                 </div>
                 {shareToken ? (
-                  <TooltipWrapper tooltip="Remove shared">
+                  <TooltipWrapper delayDuration={1000} tooltip="Remove sharing">
                     <Button
-                      className="size-12 rounded-full"
+                      className="size-10 rounded-full"
                       size="lg"
                       disabled={isSharedRemoveLoading}
                       variant="destructive"
