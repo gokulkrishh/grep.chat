@@ -18,7 +18,7 @@ import { invalidateMessagesCache } from "@/lib/redis/cache"
 import { createClient } from "@/lib/supabase/server"
 import { Database, Json } from "@/supabase/database.types"
 
-export const maxDuration = 180
+export const maxDuration = 300
 
 const MAX_MESSAGES_FOR_CONTEXT = 20
 
