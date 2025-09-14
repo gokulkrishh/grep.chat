@@ -6,7 +6,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
 import { deleteChat } from "@/actions/chat"
-import { TrashIcon } from "@/components/icons"
+import { TrashIcon, XIcon } from "@/components/icons"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -67,7 +67,7 @@ export const SidebarChats = () => {
           })}
           key={chat.id}
         >
-          <SidebarMenuButton className="inline-flex w-full pr-2" asChild>
+          <SidebarMenuButton className="inline-flex w-full pr-0.5" asChild>
             <Link
               prefetch={index < 5}
               onClick={() => {
@@ -79,24 +79,22 @@ export const SidebarChats = () => {
             >
               <span className="block w-full truncate">{chat.title}</span>
 
-              <TooltipWrapper delayDuration={2000} side="right" tooltip="Delete chat">
-                <Button
-                  className={cn(
-                    `size-9! shrink-0 transition-all md:opacity-0 md:group-hover/chat-item:opacity-100`,
-                  )}
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    setOpen(true)
-                    setDeletedChatId(chat.id)
-                  }}
-                >
-                  <TrashIcon className="size-4" />
-                  <span className="sr-only">Delete</span>
-                </Button>
-              </TooltipWrapper>
+              <Button
+                className={cn(
+                  `size-9 shrink-0 transition-all md:opacity-0 md:group-hover/chat-item:opacity-100 md:group-focus/chat-item:opacity-100`,
+                )}
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setOpen(true)
+                  setDeletedChatId(chat.id)
+                }}
+              >
+                <XIcon className="size-4" />
+                <span className="sr-only">Delete</span>
+              </Button>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
