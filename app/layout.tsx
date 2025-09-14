@@ -66,9 +66,9 @@ export default async function RootLayout({
         <ThemeProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <ChatsProvider>
-              <div className="relative flex h-full w-full">
+              <div className="flex h-full w-full overflow-hidden">
                 <AppSidebar />
-                <div className="flex h-dvh w-full flex-col overflow-hidden">
+                <div className="relative flex h-full w-full flex-col overflow-hidden">
                   <Header />
                   {children}
                 </div>
