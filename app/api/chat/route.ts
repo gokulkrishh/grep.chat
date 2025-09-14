@@ -52,7 +52,7 @@ type RequestBody = {
   model: string
   reasoning: Reasoning
   webSearch: boolean
-  messageIdToDelete?: string
+  regenerateMessageId?: string
 }
 
 export async function POST(request: Request) {
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       model,
       reasoning,
       webSearch,
-      messageIdToDelete,
+      regenerateMessageId,
     }: RequestBody = await request.json()
 
     const {
@@ -82,19 +82,15 @@ export async function POST(request: Request) {
 
     const cacheId = `${chatId}${user.id}`
 
-    // Ensure chat exists or new chat is created with a title
-    const title = message.parts[0].type === "text" ? message.parts[0].text : ""
-    await ensureChat(chatId, title)
-
     if (trigger === "regenerate-message") {
-      if (!messageIdToDelete) {
-        return NextResponse.json({ error: "messageIdToDelete is missing" }, { status: 400 })
+      if (!regenerateMessageId) {
+        return NextResponse.json({ error: "regenerateMessageId is missing" }, { status: 400 })
       }
 
       const { error: deleteError } = await supabase
         .from("messages")
         .delete()
-        .eq("id", messageIdToDelete)
+        .eq("id", regenerateMessageId)
         .eq("chat_id", chatId)
 
       if (deleteError) {

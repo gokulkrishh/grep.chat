@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 
+import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
 
@@ -53,6 +54,7 @@ export default function ChatInput({
         { role: "user", parts: [{ type: "text", text }] },
         { body: { reasoning: props.reasoning, webSearch, model: props.model, id: props.id } },
       )
+      await ensureChat(props.id, text.slice(0, 20))
       redirectToChat(props.id)
     } finally {
       refreshChats()

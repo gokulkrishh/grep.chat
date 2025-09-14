@@ -21,15 +21,18 @@ import { cn } from "@/lib/utils"
 
 import { useChats } from "../contexts/chats-provider"
 import { Loader } from "../loader"
+import TooltipWrapper from "../tooltip-wrapper"
 
 export const SidebarChats = () => {
   const router = useRouter()
-  const chatId = usePathname()?.split?.("/chat/")?.[1]
+  const { chats, refreshChats } = useChats()
   const { isMobile, toggleSidebar } = useSidebar()
+
   const [open, setOpen] = useState<boolean>(false)
   const [deletedChatId, setDeletedChatId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { chats, refreshChats } = useChats()
+
+  const chatId = usePathname()?.split?.("/chat/")?.[1]
 
   const handleDelete = async () => {
     if (!deletedChatId) return
@@ -37,12 +40,12 @@ export const SidebarChats = () => {
     try {
       setIsLoading(true)
       await deleteChat(deletedChatId)
-    } finally {
       refreshChats()
       setOpen(false)
       setDeletedChatId(null)
-      setIsLoading(false)
       router.push("/")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -64,7 +67,7 @@ export const SidebarChats = () => {
           })}
           key={chat.id}
         >
-          <SidebarMenuButton className="w-full truncate" asChild>
+          <SidebarMenuButton className="w-full truncate pr-1" asChild>
             <Link
               prefetch={index < 5}
               onClick={() => {
@@ -76,20 +79,24 @@ export const SidebarChats = () => {
             >
               <span className="flex w-full truncate pr-2">{chat.title?.slice(0, 40)}</span>
 
-              <Button
-                className={cn(`size-9! shrink-0 md:opacity-0 md:group-hover/chat-item:opacity-100`)}
-                variant="ghost"
-                size="icon"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  setOpen(true)
-                  setDeletedChatId(chat.id)
-                }}
-              >
-                <TrashIcon className="size-4" />
-                <span className="sr-only">Delete</span>
-              </Button>
+              <TooltipWrapper delayDuration={2000} side="right" tooltip="Delete chat">
+                <Button
+                  className={cn(
+                    `size-9! shrink-0 transition-all md:opacity-0 md:group-hover/chat-item:opacity-100`,
+                  )}
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setOpen(true)
+                    setDeletedChatId(chat.id)
+                  }}
+                >
+                  <TrashIcon className="size-4" />
+                  <span className="sr-only">Delete</span>
+                </Button>
+              </TooltipWrapper>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -116,6 +123,7 @@ export const SidebarChats = () => {
               variant="destructive"
               className="w-fit rounded-full"
               onClick={() => {
+                if (isLoading) return
                 handleDelete()
               }}
             >

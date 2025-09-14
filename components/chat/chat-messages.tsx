@@ -26,7 +26,7 @@ export default function ChatMessages({ regenerate, error, status, messages, ...p
     regenerate({
       messageId,
       body: {
-        messageIdToDelete: messageId,
+        regenerateMessageId: messageId,
         model: props.model,
         reasoning: props.reasoning,
         webSearch: props.webSearch,
