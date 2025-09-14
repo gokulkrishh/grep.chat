@@ -80,6 +80,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "chatId is missing" }, { status: 400 })
     }
 
+    const cacheId = `${chatId}${user.id}`
+
     // Ensure chat exists or new chat is created with a title
     const title = message.parts[0].type === "text" ? message.parts[0].text : ""
     await ensureChat(chatId, title)
@@ -99,7 +101,7 @@ export async function POST(request: Request) {
         throw new Error(deleteError.message)
       }
 
-      await invalidateMessagesCache(chatId)
+      await invalidateMessagesCache(cacheId)
     }
 
     const { data: previousMessages, error: selectError } = await supabase
@@ -125,7 +127,7 @@ export async function POST(request: Request) {
         throw new Error(insertError.message)
       }
 
-      await invalidateMessagesCache(chatId)
+      await invalidateMessagesCache(cacheId)
     }
 
     const validatedMessages = await validateUIMessages({
@@ -187,7 +189,7 @@ export async function POST(request: Request) {
           throw new Error(error.message)
         }
 
-        await invalidateMessagesCache(chatId)
+        await invalidateMessagesCache(cacheId)
       },
       messageMetadata: ({ part }) => {
         if (part.type === "start") {

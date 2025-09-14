@@ -17,7 +17,9 @@ export const getMessagesByChatId = async (chatId: string) => {
     redirect("/")
   }
 
-  const cachedMessages = await getMessagesCache(chatId)
+  const cacheId = `${chatId}${user.id}`
+
+  const cachedMessages = await getMessagesCache(cacheId)
 
   if (cachedMessages) {
     return cachedMessages
@@ -36,7 +38,7 @@ export const getMessagesByChatId = async (chatId: string) => {
   const messages = (data ?? []) as unknown as UIMessage[]
 
   if (messages.length > 0) {
-    await setMessagesCache(chatId, messages)
+    await setMessagesCache(cacheId, messages)
   }
 
   return messages

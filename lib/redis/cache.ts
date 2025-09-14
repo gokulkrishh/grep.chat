@@ -3,7 +3,7 @@ import { UIMessage } from "ai"
 import redis from "./client"
 
 const CACHE_CONFIG = {
-  MESSAGES_PREFIX: "chat:",
+  MESSAGES_PREFIX: "messages:",
   MESSAGES_TTL: 60 * 60 * 24, // 24 hours
 }
 
@@ -26,7 +26,7 @@ export const getMessagesCache = async (chatId: string) => {
     const key = getMessagesCacheKey(chatId)
     const messages = await redis.get(key)
     console.log("Messages cache get", key, messages?.length)
-    return messages ? JSON.parse(messages) : []
+    return messages ? JSON.parse(messages) : null
   } catch (error) {
     console.error("Error getting messages cache", error)
     return []
