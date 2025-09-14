@@ -20,7 +20,7 @@ export default function SidebarTheme() {
         <ThemeIcon className="text-muted-foreground size-4.5" /> Theme
       </DropdownMenuSubTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuSubContent className="bg-background flex flex-col gap-0.25">
+        <DropdownMenuSubContent sideOffset={8} className="flex min-w-40 flex-col gap-0.25">
           <DropdownMenuItem
             className={cn("text-foreground flex items-center justify-between", {
               "bg-accent": theme === "system",
