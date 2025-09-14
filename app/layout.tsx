@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { cookies } from "next/headers"
@@ -71,6 +72,8 @@ export default async function RootLayout({
             </ChatsProvider>
           </SidebarProvider>
         </ThemeProvider>
+
+        <Analytics />
       </body>
     </html>
   )
