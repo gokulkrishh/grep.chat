@@ -35,7 +35,7 @@ const ChatsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { data: chats } = await supabase
       .from("chats")
-      .select("id,title")
+      .select("id,title,created_at")
       .eq("created_by", user.id)
       .order("created_at", { ascending: false })
 

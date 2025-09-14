@@ -17,7 +17,7 @@ export const getChats = async () => {
     .from("chats")
     .select("*")
     .eq("created_by", user.id)
-    .order("created_at", { ascending: false })
+    .order("updated_at", { ascending: false })
 
   if (error) {
     return []

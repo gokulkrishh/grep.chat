@@ -44,13 +44,15 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  hideOverlay = false,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
+  hideOverlay?: boolean
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay />
+      {!hideOverlay && <DialogOverlay />}
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
@@ -63,7 +65,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="ring-offset-background focus-visible:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground dark:hover:bg-accent absolute top-1.5 right-1.5 cursor-pointer rounded-full p-3 opacity-70 transition-opacity hover:bg-neutral-200 hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            className="ring-offset-background focus-visible:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground dark:hover:bg-accent absolute top-2 right-2 cursor-pointer rounded-full p-3 opacity-70 transition-opacity hover:bg-neutral-200 hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <XIcon />
             <span className="sr-only">Close</span>

@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Choose your AI. Ask anything. Get answers that matter.",
     start_url: "/",
     display: "standalone",
-    background_color: "#fff",
-    theme_color: "#fff",
+    background_color: "#0a0a0a",
+    theme_color: "#0a0a0a",
     icons: [],
   }
 }

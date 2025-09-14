@@ -49,7 +49,7 @@ export default async function SidebarProfile() {
           </div>
         </SidebarMenuButton>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-48" side="right" sideOffset={-2} align="end">
+      <DropdownMenuContent className="min-w-48" sideOffset={-2} align="end">
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="size-6 rounded-full">

@@ -48,7 +48,7 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
 }
 
@@ -66,9 +66,9 @@ export default async function RootLayout({
         <ThemeProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <ChatsProvider>
-              <div className="flex h-full w-full">
+              <div className="relative flex h-full w-full">
                 <AppSidebar />
-                <div className="relative flex h-dvh w-full flex-col overflow-hidden">
+                <div className="flex h-dvh w-full flex-col overflow-hidden">
                   <Header />
                   {children}
                 </div>

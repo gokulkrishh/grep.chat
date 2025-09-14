@@ -4,7 +4,8 @@ import Link from "next/link"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 
-import { NewChatIcon, SearchIcon } from "../icons"
+import ChatSearchDialog from "../chat/chat-search-dialog"
+import { NewChatIcon } from "../icons"
 import {
   SidebarGroup,
   SidebarHeader,
@@ -43,11 +44,7 @@ export function SidebarHeaderActions() {
           <NewChatIcon className="size-4.5" /> New chat
         </Link>
       </SidebarMenuButton>
-      <SidebarMenuButton className="flex w-full text-sm" asChild>
-        <Link onClick={handleClick} className="flex w-full gap-2 text-sm" href="/">
-          <SearchIcon className="size-4.5" /> Search chats
-        </Link>
-      </SidebarMenuButton>
+      <ChatSearchDialog />
     </SidebarGroup>
   )
 }
