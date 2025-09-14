@@ -4,11 +4,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { createClient } from "@/lib/supabase/server"
 
 import SignOut from "../signout"
+import SidebarTheme from "./sidebar-theme"
 
 export default async function SidebarProfile() {
   const supabase = await createClient()
@@ -42,6 +44,9 @@ export default async function SidebarProfile() {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-background w-62" sideOffset={10} align="center">
+        <DropdownMenuSub>
+          <SidebarTheme />
+        </DropdownMenuSub>
         <DropdownMenuItem className="flex items-center gap-2" asChild>
           <SignOut />
         </DropdownMenuItem>
