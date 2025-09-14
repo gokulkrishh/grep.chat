@@ -1,8 +1,6 @@
 import { useState } from "react"
 
-import { BrainIcon } from "lucide-react"
-
-import { CheckmarkIcon } from "@/components/icons"
+import { BrainIcon, CheckmarkIcon } from "@/components/icons"
 import { PromptInputAction } from "@/components/prompt-kit/prompt-input"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"

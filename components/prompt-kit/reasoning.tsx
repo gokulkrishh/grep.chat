@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useEffect, useRef, useState } from "react"
 
-import { ChevronDownIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 
+import { ChevronDownIcon } from "../icons"
 import { Markdown } from "./markdown"
 
 type ReasoningContextType = {

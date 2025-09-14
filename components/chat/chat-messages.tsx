@@ -30,6 +30,7 @@ export default function ChatMessages({ regenerate, error, status, messages, ...p
         model: props.model,
         reasoning: props.reasoning,
         webSearch: props.webSearch,
+        id: props.id,
       },
     })
   }
