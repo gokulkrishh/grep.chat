@@ -115,13 +115,13 @@ export default function ChatMessages({ regenerate, error, status, messages, ...p
           <MessageScrollButton />
 
           <div className="mx-auto flex w-full max-w-3xl flex-col space-y-8 empty:hidden">
+            {error && <MessageError error={error} />}
+
             <div className="h-3">
               {(isSubmitted || (isStreaming && isLastMessageHasStartStep)) && (
                 <Loader variant="pulse-dot" size="lg" />
               )}
             </div>
-
-            {error && <MessageError error={error} />}
           </div>
         </ChatContainerContent>
       </ChatContainerRoot>

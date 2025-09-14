@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { cookies } from "next/headers"
 
-import ChatInputProvider from "@/components/contexts/chat-input-provider"
 import ChatsProvider from "@/components/contexts/chats-provider"
 import { ThemeProvider } from "@/components/contexts/theme-provider"
 import Header from "@/components/header"
@@ -67,15 +66,13 @@ export default async function RootLayout({
         <ThemeProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <ChatsProvider>
-              <ChatInputProvider>
-                <div className="flex h-full w-full overflow-hidden">
-                  <AppSidebar />
-                  <div className="relative flex h-full w-full flex-col overflow-hidden">
-                    <Header />
-                    {children}
-                  </div>
+              <div className="flex h-full w-full overflow-hidden">
+                <AppSidebar />
+                <div className="relative flex h-full w-full flex-col overflow-hidden">
+                  <Header />
+                  {children}
                 </div>
-              </ChatInputProvider>
+              </div>
             </ChatsProvider>
           </SidebarProvider>
         </ThemeProvider>
