@@ -1,10 +1,14 @@
-import { cn } from "@/lib/utils"
-import { marked } from "marked"
 import { memo, useId, useMemo } from "react"
 import ReactMarkdown, { Components } from "react-markdown"
+
+import { marked } from "marked"
 import remarkBreaks from "remark-breaks"
 import remarkGfm from "remark-gfm"
-import { CodeBlock, CodeBlockCode } from "./code-block"
+
+import { cn } from "@/lib/utils"
+
+import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "./code-block"
+import CodeBlockCopy from "./code-block-copy"
 
 export type MarkdownProps = {
   children: string
@@ -33,10 +37,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
     if (isInline) {
       return (
         <span
-          className={cn(
-            "bg-primary-foreground rounded-sm px-1 font-mono text-sm",
-            className
-          )}
+          className={cn("bg-primary-foreground rounded-sm px-1 font-mono text-sm", className)}
           {...props}
         >
           {children}
@@ -48,7 +49,10 @@ const INITIAL_COMPONENTS: Partial<Components> = {
 
     return (
       <CodeBlock className={className}>
-        <CodeBlockCode code={children as string} language={language} />
+        <CodeBlockGroup>
+          <CodeBlockCopy code={children as string} language={language} />
+          <CodeBlockCode code={children as string} language={language} />
+        </CodeBlockGroup>
       </CodeBlock>
     )
   },
@@ -66,17 +70,14 @@ const MemoizedMarkdownBlock = memo(
     components?: Partial<Components>
   }) {
     return (
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkBreaks]}
-        components={components}
-      >
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} components={components}>
         {content}
       </ReactMarkdown>
     )
   },
   function propsAreEqual(prevProps, nextProps) {
     return prevProps.content === nextProps.content
-  }
+  },
 )
 
 MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock"

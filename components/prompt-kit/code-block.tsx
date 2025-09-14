@@ -36,7 +36,7 @@ export type CodeBlockCodeProps = {
 function CodeBlockCode({
   code,
   language = "tsx",
-  theme = "github-light",
+  theme = "dark-plus",
   className,
   ...props
 }: CodeBlockCodeProps) {
@@ -73,7 +73,7 @@ export type CodeBlockGroupProps = React.HTMLAttributes<HTMLDivElement>
 
 function CodeBlockGroup({ children, className, ...props }: CodeBlockGroupProps) {
   return (
-    <div className={cn("flex items-center justify-between", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-between", className)} {...props}>
       {children}
     </div>
   )
