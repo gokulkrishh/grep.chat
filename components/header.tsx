@@ -14,7 +14,7 @@ export default async function Header() {
 
   return (
     <Suspense fallback={<div />}>
-      <header className="absolute top-0 z-2 mx-auto flex h-fit w-full items-center justify-between p-4 max-sm:py-3">
+      <header className="absolute top-0 z-2 mx-auto flex h-18 w-full items-center justify-between p-4 max-sm:py-3">
         {user ? <SidebarTrigger /> : <div />}
 
         <div className="flex h-full max-w-fit items-center gap-4">
