@@ -61,7 +61,7 @@ export default function ChatMessages({ regenerate, error, status, messages, ...p
                 )}
               >
                 {isAssistant ? (
-                  <div className="group child flex w-full flex-col gap-2 empty:hidden">
+                  <div className="group child flex w-full flex-col empty:hidden">
                     {isLastMessageStreaming && isSearching && (
                       <MessageSources isStreaming message={message} />
                     )}

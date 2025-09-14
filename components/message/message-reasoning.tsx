@@ -29,7 +29,7 @@ export default function MessageReasoning({ message, isStreaming }: Props) {
       : 0
 
   return (
-    <Reasoning className="mb-2 empty:hidden" key={message.id} isStreaming={isStreaming}>
+    <Reasoning className="text-sm empty:hidden" key={message.id} isStreaming={isStreaming}>
       <ReasoningTrigger>
         {isStreaming && !reasoningMs ? (
           <Loader variant="text-shimmer" text="Thinking" />

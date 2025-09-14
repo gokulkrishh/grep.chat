@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 
 import { cn } from "@/lib/utils"
 
-import { ChevronDownIcon } from "../icons"
+import { BrainIcon, ChevronDownIcon } from "../icons"
 import { Markdown } from "./markdown"
 
 type ReasoningContextType = {
@@ -74,17 +74,26 @@ export type ReasoningTriggerProps = {
 
 function ReasoningTrigger({ children, className, ...props }: ReasoningTriggerProps) {
   const { isOpen, onOpenChange } = useReasoningContext()
+  const [isHovering, setIsHovering] = useState(false)
 
   return (
     <button
-      className={cn("flex cursor-pointer items-center gap-2", className)}
+      className={cn("flex cursor-pointer items-center gap-2 text-sm", className)}
       onClick={() => onOpenChange(!isOpen)}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       {...props}
     >
-      <span className="text-primary">{children}</span>
-      <div className={cn("transform transition-transform", isOpen ? "rotate-180" : "")}>
-        <ChevronDownIcon className="size-4" />
+      <div
+        className={cn(
+          "text-muted-foreground transform transition-transform",
+          isOpen ? "rotate-180" : "",
+        )}
+      >
+        {isOpen || isHovering ? <ChevronDownIcon className="size-4 shrink-0" /> : null}
+        {!isOpen && !isHovering ? <BrainIcon className="size-4 shrink-0" /> : null}
       </div>
+      <span className="text-muted-foreground">{children}</span>
     </button>
   )
 }
@@ -110,19 +119,36 @@ function ReasoningContent({
   useEffect(() => {
     if (!contentRef.current || !innerRef.current) return
 
-    const observer = new ResizeObserver(() => {
-      if (contentRef.current && innerRef.current && isOpen) {
-        contentRef.current.style.maxHeight = `${innerRef.current.scrollHeight + 20}px`
+    const scrollToBottom = () => {
+      if (contentRef.current && isOpen) {
+        contentRef.current.scrollTop = contentRef.current.scrollHeight
       }
-    })
-
-    observer.observe(innerRef.current)
-
-    if (isOpen) {
-      contentRef.current.style.maxHeight = `${innerRef.current.scrollHeight + 20}px`
     }
 
-    return () => observer.disconnect()
+    // Use ResizeObserver for size changes
+    const resizeObserver = new ResizeObserver(() => {
+      scrollToBottom()
+    })
+
+    // Use MutationObserver for DOM changes (text streaming)
+    const mutationObserver = new MutationObserver(() => {
+      scrollToBottom()
+    })
+
+    resizeObserver.observe(innerRef.current)
+    mutationObserver.observe(innerRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
+
+    // Initial scroll to bottom
+    scrollToBottom()
+
+    return () => {
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+    }
   }, [isOpen])
 
   const content = markdown ? <Markdown>{children as string}</Markdown> : children
@@ -130,15 +156,23 @@ function ReasoningContent({
   return (
     <div
       ref={contentRef}
-      className={cn("overflow-hidden transition-[max-height] duration-150 ease-out", className)}
-      style={{
-        maxHeight: isOpen ? contentRef.current?.scrollHeight : "0px",
-      }}
+      className={cn(
+        "parent scroll-p-2 overflow-auto transition-[max-height] duration-150 ease-out empty:hidden",
+        {
+          "ml-2 h-fit max-h-40 border-l pl-2": isOpen,
+          "h-0 max-h-0": !isOpen,
+        },
+        className,
+      )}
       {...props}
     >
       <div
         ref={innerRef}
-        className={cn("text-muted-foreground prose prose-sm dark:prose-invert", contentClassName)}
+        className={cn(
+          "text-muted-foreground prose prose-sm dark:prose-invert child empty:hidden",
+
+          contentClassName,
+        )}
       >
         {content}
       </div>
