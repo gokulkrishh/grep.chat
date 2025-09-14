@@ -30,7 +30,7 @@ export default async function SidebarProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton>
+        <SidebarMenuButton size="lg">
           <Image
             className="inline-flex size-7 shrink-0 rounded-full"
             src={user.user_metadata.avatar_url}
