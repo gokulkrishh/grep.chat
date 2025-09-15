@@ -6,7 +6,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
 import { deleteChat } from "@/actions/chat"
-import { TrashIcon, XIcon } from "@/components/icons"
+import { TrashIcon } from "@/components/icons"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -21,7 +21,6 @@ import { cn } from "@/lib/utils"
 
 import { useChats } from "../contexts/chats-provider"
 import { Loader } from "../loader"
-import TooltipWrapper from "../tooltip-wrapper"
 
 export const SidebarChats = () => {
   const router = useRouter()
@@ -40,11 +39,13 @@ export const SidebarChats = () => {
     try {
       setIsLoading(true)
       await deleteChat(deletedChatId)
-      refreshChats()
-      setOpen(false)
       setDeletedChatId(null)
-      router.push("/")
     } finally {
+      setOpen(false)
+      if (chatId) {
+        router.push("/")
+      }
+      refreshChats()
       setIsLoading(false)
     }
   }
@@ -92,7 +93,7 @@ export const SidebarChats = () => {
                   setDeletedChatId(chat.id)
                 }}
               >
-                <XIcon className="size-4" />
+                <TrashIcon className="size-4" />
                 <span className="sr-only">Delete</span>
               </Button>
             </Link>
