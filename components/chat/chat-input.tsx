@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react"
 
+import { usePathname } from "next/navigation"
+
 import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -21,7 +23,7 @@ export default function ChatInput({
   webSearch,
   ...props
 }: UseChatReturnType) {
-  const pathname = window?.location.pathname
+  const pathname = usePathname()
   const isMobile = useIsMobile()
   const [text, setText] = useState("")
   const [files, setFiles] = useState<File[]>([])
