@@ -106,12 +106,13 @@ export const SidebarChats = () => {
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-left">Delete chat?</AlertDialogTitle>
-            <AlertDialogDescription className="text-foreground text-left">
-              This will delete <span className="font-semibold">{deletedChat?.title}</span>{" "}
+            <AlertDialogTitle>Delete chat?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will delete{" "}
+              <span className="text-foreground font-semibold">{deletedChat?.title}</span>{" "}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="my-1 w-full flex-row items-end justify-end gap-3">
+          <AlertDialogFooter className="my-1 w-full gap-3">
             <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
 
             <AlertDialogAction

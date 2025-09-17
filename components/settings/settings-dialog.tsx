@@ -65,9 +65,9 @@ const SettingsDialog: React.FC = () => {
         <VisuallyHidden>
           <DialogTitle>Settings</DialogTitle>
         </VisuallyHidden>
-        <div className="grid min-h-[420px] grid-cols-[200px_1fr]">
+        <div className="grid min-h-54 md:min-h-96 md:grid-cols-[200px_1fr]">
           <aside className="border-r p-2 py-4">
-            <nav className="flex flex-col gap-0.5" aria-label="Settings navigation">
+            <nav className="flex gap-0.5 md:flex-col" aria-label="Settings navigation">
               <Button
                 variant="ghost"
                 aria-label="General"
