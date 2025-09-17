@@ -3,19 +3,25 @@
 import { useMemo, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { useChats } from "../contexts/chats-provider"
 import { ChatIcon, SearchIcon } from "../icons"
-import { Button } from "../ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import { Input } from "../ui/input"
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command"
 import { SidebarMenuBadge, SidebarMenuButton } from "../ui/sidebar"
 
 export default function ChatSearchDialog() {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const { chats } = useChats()
+  const router = useRouter()
 
   useHotkeys("meta+k", () => setOpen(true), [open])
 
@@ -25,58 +31,48 @@ export default function ChatSearchDialog() {
   )
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <SidebarMenuButton className="group/search-dialog flex w-full justify-between text-sm">
-          <span className="flex items-center gap-2">
-            <SearchIcon className="size-4.5" /> Search chats{" "}
-          </span>
-          <SidebarMenuBadge className="text-muted-foreground mr-2 h-3 items-center text-xs opacity-0 group-hover/search-dialog:opacity-100">
-            ⌘ K
-          </SidebarMenuBadge>
-        </SidebarMenuButton>
-      </DialogTrigger>
-      <DialogContent
-        className="bg-popover w-full gap-0 overflow-hidden p-0 shadow-2xl sm:max-w-2xl"
-        hideOverlay
+    <>
+      <SidebarMenuButton
+        className="group/search-dialog flex w-full justify-between text-sm"
+        onClick={() => setOpen(true)}
       >
-        <DialogHeader className="sr-only">
-          <DialogTitle />
-        </DialogHeader>
-        <div className="flex flex-col gap-4 border-b">
-          <Input
-            autoFocus
-            placeholder="Search chats.."
-            className="h-14 w-full rounded-none border-0 px-4 py-4 pl-5 focus-visible:ring-0"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-1 p-1 py-2">
-          {filteredChats.length > 0 ? (
-            filteredChats.map((chat) => (
-              <Button
-                variant="ghost"
-                className="flex w-full justify-start gap-2 text-left"
-                key={chat.id}
-                asChild
-                size="lg"
-                onClick={() => {
-                  setOpen(false)
-                }}
-              >
-                <Link href={`/chat/${chat.id}`}>
-                  <ChatIcon className="size-4.5" /> {chat.title}
-                </Link>
-              </Button>
-            ))
-          ) : (
-            <div className="flex flex-col gap-1 p-1 py-8 text-center">
-              <p className="text-muted-foreground text-sm">No chats found</p>
-            </div>
+        <span className="flex items-center gap-2">
+          <SearchIcon className="size-4.5" /> Search chats{" "}
+        </span>
+        <SidebarMenuBadge className="text-muted-foreground mr-2 h-3 items-center text-xs opacity-0 group-hover/search-dialog:opacity-100">
+          ⌘ K
+        </SidebarMenuBadge>
+      </SidebarMenuButton>
+
+      <CommandDialog open={open} onOpenChange={setOpen} className="sm:max-w-2xl" showCloseButton>
+        <CommandInput
+          autoFocus
+          placeholder="Search chats.."
+          value={search}
+          onValueChange={setSearch}
+        />
+        <CommandList>
+          <CommandEmpty>No chats found.</CommandEmpty>
+
+          {filteredChats.length > 0 && (
+            <CommandGroup heading="Chats">
+              {filteredChats.map((chat) => (
+                <CommandItem
+                  key={chat.id}
+                  value={chat.title ?? chat.id}
+                  onSelect={() => {
+                    setOpen(false)
+                    router.push(`/chat/${chat.id}`)
+                  }}
+                >
+                  <ChatIcon className="size-4.5" />
+                  <span>{chat.title}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
           )}
-        </div>
-      </DialogContent>
-    </Dialog>
+        </CommandList>
+      </CommandDialog>
+    </>
   )
 }
