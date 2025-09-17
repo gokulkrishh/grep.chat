@@ -1,0 +1,90 @@
+---
+description: Git conventional commit message guidelines
+globs:
+alwaysApply: false
+---
+
+Use conventional commit format for clear and consistent commit messages.
+
+## Format
+
+```
+<type>: <description>
+```
+
+## Common Types
+
+### **feat**: New Features
+
+```bash
+feat: add user authentication
+feat: implement dark mode toggle
+feat: add payment processing
+```
+
+### **fix**: Bug Fixes
+
+```bash
+fix: sidebar click issue
+fix: login form validation
+fix: memory leak in component
+```
+
+### **chore**: Maintenance
+
+```bash
+chore: upgrade packages
+chore: update dependencies
+chore: configure build settings
+```
+
+### **refactor**: Code Restructuring
+
+```bash
+refactor: sidebar for application
+refactor: user validation logic
+refactor: database queries
+```
+
+### **docs**: Documentation
+
+```bash
+docs: update README
+docs: add API documentation
+docs: fix installation guide
+```
+
+### **style**: Code Formatting
+
+```bash
+style: fix indentation
+style: resolve linting errors
+style: format with prettier
+```
+
+### **test**: Testing
+
+```bash
+test: add user login tests
+test: fix failing unit tests
+test: add integration tests
+```
+
+## Examples
+
+```bash
+feat: add shopping cart functionality
+fix: resolve checkout button not working
+chore: update React to version 18
+refactor: extract reusable components
+docs: add component usage examples
+style: fix TypeScript linting warnings
+test: add form validation tests
+```
+
+## Rules
+
+- Use present tense ("add" not "added")
+- Keep descriptions under 50 characters
+- Start with lowercase after colon
+- No period at the end
