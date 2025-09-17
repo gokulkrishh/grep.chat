@@ -66,12 +66,12 @@ export default function ChatInput({
       if (isHomePath) {
         await ensureChat(chatId, text?.slice(0, 40))
         redirectToChat(chatId)
-        refreshChats()
       }
     } catch (error) {
       console.log("Error while submitting message", error)
     } finally {
       setFiles([])
+      refreshChats()
     }
   }
 

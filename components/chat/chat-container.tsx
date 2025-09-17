@@ -20,7 +20,7 @@ export default function ChatContainer({ id, initialMessages }: Props) {
   const isMessagesEmpty = chat.messages.length === 0
 
   return (
-    <AnimatePresence key={id ?? "homepage"}>
+    <AnimatePresence key={id ?? "homepage"} mode="popLayout">
       <main className="mx-auto flex h-dvh w-full flex-col items-center justify-center">
         {isMessagesEmpty ? <ChatWelcome /> : <ChatMessages {...chat} />}
         <motion.div

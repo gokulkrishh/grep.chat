@@ -35,12 +35,14 @@ export function SidebarHeaderActions() {
     if (isMobile) {
       toggleSidebar()
     }
+
+    document.dispatchEvent(new Event("reset-chat"))
   }
 
   return (
     <SidebarGroup className="-mt-1 flex flex-col">
       <SidebarMenuButton className="flex w-full text-sm" asChild>
-        <Link onClick={handleClick} className="flex w-full gap-2 text-sm" href="/">
+        <Link prefetch onClick={handleClick} className="flex w-full gap-2 text-sm" href="/">
           <NewChatIcon className="size-4.5" /> New chat
         </Link>
       </SidebarMenuButton>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { useChat as useAiSdkChat } from "@ai-sdk/react"
 
@@ -41,6 +41,18 @@ export const useChat = ({ id, initialMessages }: Props) => {
       },
     }),
   })
+
+  useEffect(() => {
+    const handleResetChat = () => {
+      chat.setMessages([])
+    }
+
+    document.addEventListener("reset-chat", handleResetChat)
+
+    return () => {
+      document.removeEventListener("reset-chat", handleResetChat)
+    }
+  }, [chat])
 
   return {
     ...chat,
