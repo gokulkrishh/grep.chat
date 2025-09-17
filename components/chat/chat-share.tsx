@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "motion/react"
 
 import { usePathname } from "next/navigation"
 
+import { v4 as uuidv4 } from "uuid"
+
 import { ClipboardIcon, LinkIcon, ShareIcon, TrashIcon } from "@/components/icons"
 import { Loader } from "@/components/loader"
 import { baseUrl } from "@/components/signin"
@@ -71,11 +73,10 @@ export default function ChatShare() {
 
     try {
       setIsLoading(true)
-      const token = crypto.randomUUID()
       const { data, error } = await supabase
         .from("chats")
         .update({
-          share_token: token,
+          share_token: uuidv4(),
           share_created_at: new Date().toISOString(),
         })
         .eq("id", chatId)
