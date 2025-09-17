@@ -67,9 +67,6 @@ export default async function SidebarProfile() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuSub>
-          <SidebarTheme />
-        </DropdownMenuSub>
         <DropdownMenuItem className="flex items-center gap-2" asChild>
           <SettingsDialog />
         </DropdownMenuItem>

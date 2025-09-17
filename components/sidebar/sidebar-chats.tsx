@@ -9,6 +9,8 @@ import { deleteChat } from "@/actions/chat"
 import { TrashIcon } from "@/components/icons"
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -110,17 +112,11 @@ export const SidebarChats = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="my-1 w-full flex-row items-end justify-end gap-3">
-            <Button
-              variant="secondary"
-              className="w-fit rounded-full"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
+            <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
+
+            <AlertDialogAction
               disabled={isLoading}
               variant="destructive"
-              className="w-fit rounded-full"
               onClick={() => {
                 if (isLoading) return
                 handleDelete()
@@ -128,7 +124,7 @@ export const SidebarChats = () => {
             >
               {isLoading ? <Loader /> : null}
               Delete
-            </Button>
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
