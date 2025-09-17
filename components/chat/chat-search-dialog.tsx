@@ -1,20 +1,23 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 
 import Link from "next/link"
 
 import { useChats } from "../contexts/chats-provider"
-import { ChatIcon, NewChatIcon, SearchIcon } from "../icons"
+import { ChatIcon, SearchIcon } from "../icons"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import { Input } from "../ui/input"
-import { SidebarMenuButton } from "../ui/sidebar"
+import { SidebarMenuBadge, SidebarMenuButton } from "../ui/sidebar"
 
 export default function ChatSearchDialog() {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const { chats } = useChats()
+
+  useHotkeys("meta+k", () => setOpen(true), [open])
 
   const filteredChats = useMemo(
     () => chats.filter((chat) => chat.title?.toLowerCase().includes(search.toLowerCase())),
@@ -24,12 +27,17 @@ export default function ChatSearchDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <SidebarMenuButton className="flex w-full text-sm">
-          <SearchIcon className="size-4.5" /> Search chats
+        <SidebarMenuButton className="group/search-dialog flex w-full justify-between text-sm">
+          <span className="flex items-center gap-2">
+            <SearchIcon className="size-4.5" /> Search chats{" "}
+          </span>
+          <SidebarMenuBadge className="text-muted-foreground mr-2 h-3 items-center text-xs opacity-0 group-hover/search-dialog:opacity-100">
+            ⌘ K
+          </SidebarMenuBadge>
         </SidebarMenuButton>
       </DialogTrigger>
       <DialogContent
-        className="bg-sidebar w-full gap-0 overflow-hidden p-0 shadow-2xl sm:max-w-2xl"
+        className="bg-popover w-full gap-0 overflow-hidden p-0 shadow-2xl sm:max-w-2xl"
         hideOverlay
       >
         <DialogHeader className="sr-only">
@@ -39,7 +47,7 @@ export default function ChatSearchDialog() {
           <Input
             autoFocus
             placeholder="Search chats.."
-            className="h-14 w-full rounded-none border-0 px-4 py-4 focus-visible:ring-0"
+            className="h-14 w-full rounded-none border-0 px-4 py-4 pl-5 focus-visible:ring-0"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -52,6 +60,7 @@ export default function ChatSearchDialog() {
                 className="flex w-full justify-start gap-2 text-left"
                 key={chat.id}
                 asChild
+                size="lg"
                 onClick={() => {
                   setOpen(false)
                 }}
