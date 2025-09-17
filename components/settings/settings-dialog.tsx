@@ -47,7 +47,7 @@ const SettingsDialog: React.FC = () => {
       window.location.href = "/"
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error"
-      alert(message)
+      console.log("Error deleting account", message)
     } finally {
       setIsDeleting(false)
     }
