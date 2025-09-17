@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import { AnimatePresence, motion } from "motion/react"
 
 import { usePathname } from "next/navigation"
 
-import { deleteSharedChat, getSharedTokenByChatId, shareChat } from "@/actions/chat"
 import { ClipboardIcon, LinkIcon, ShareIcon, TrashIcon } from "@/components/icons"
 import { Loader } from "@/components/loader"
 import { baseUrl } from "@/components/signin"
@@ -19,21 +18,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
 import TooltipWrapper from "../tooltip-wrapper"
 
-async function createShareToken(chatId: string) {
-  const shareToken = await shareChat(chatId)
-  return shareToken
-}
-
-async function getShareToken(chatId: string) {
-  const shareToken = await getSharedTokenByChatId(chatId)
-  return shareToken
-}
-
 export default function ChatShare() {
+  const supabase = createClient()
   const pathname = usePathname()
   const chatId = pathname?.split?.("/chat/")?.[1]
   const [open, setOpen] = useState(false)
@@ -44,21 +35,21 @@ export default function ChatShare() {
   const [isSharedRemoveLoading, setIsSharedRemoveLoading] = useState(false)
   const [isSharedTokenLoading, setIsSharedTokenLoading] = useState(false)
 
-  useEffect(() => {
-    if (isChatIdPath && chatId && open) {
-      const fetchShareToken = async () => {
-        try {
-          setIsSharedTokenLoading(true)
-          const shareToken = await getShareToken(chatId as string)
-          setShareToken(shareToken ?? null)
-        } finally {
-          setIsSharedTokenLoading(false)
-        }
-      }
+  const fetchShareToken = useCallback(async () => {
+    try {
+      setIsSharedTokenLoading(true)
+      const { data } = await supabase.from("chats").select("share_token").eq("id", chatId).single()
+      setShareToken(data?.share_token ?? null)
+    } finally {
+      setIsSharedTokenLoading(false)
+    }
+  }, [supabase, chatId])
 
+  useEffect(() => {
+    if (open && chatId) {
       fetchShareToken()
     }
-  }, [isChatIdPath, chatId, open])
+  }, [open, chatId, fetchShareToken])
 
   const handleCopy = async (token: string) => {
     setIsCopied(true)
@@ -68,24 +59,35 @@ export default function ChatShare() {
     }, 2000)
   }
 
-  const handleShare = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleShare = async () => {
+    if (!chatId) {
+      return
+    }
 
     if (shareToken) {
       handleCopy(shareToken)
       return
     }
 
-    if (!chatId) {
-      return
-    }
-
     try {
       setIsLoading(true)
-      const shareToken = await createShareToken(chatId)
+      const token = crypto.randomUUID()
+      const { data, error } = await supabase
+        .from("chats")
+        .update({
+          share_token: token,
+          share_created_at: new Date().toISOString(),
+        })
+        .eq("id", chatId)
+        .select("share_token")
+        .single()
 
-      if (shareToken) {
-        setShareToken(shareToken)
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      if (data?.share_token) {
+        setShareToken(data.share_token)
       } else {
         throw new Error("Failed to create share token")
       }
@@ -99,7 +101,20 @@ export default function ChatShare() {
   const handleRemoveShared = async () => {
     try {
       setIsSharedRemoveLoading(true)
-      await deleteSharedChat(chatId as string)
+      const { error } = await supabase
+        .from("chats")
+        .update({
+          share_token: null,
+          share_created_at: null,
+        })
+        .eq("id", chatId)
+        .select("id")
+        .single()
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
       setShareToken(null)
     } catch (error) {
       console.error("Failed to remove shared", error)
@@ -116,7 +131,7 @@ export default function ChatShare() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-full" variant="ghost" type="submit">
+        <Button className="rounded-full" variant="ghost" type="button">
           <ShareIcon className="size-5" /> <span className="hidden md:block">Share</span>
         </Button>
       </DialogTrigger>
@@ -155,29 +170,27 @@ export default function ChatShare() {
                     })}
                   />
 
-                  <form onSubmit={handleShare}>
-                    <Button className="rounded-full font-semibold" type="submit">
-                      {isCopied ? (
-                        <>
-                          <ClipboardIcon /> Copied
-                        </>
-                      ) : shareToken ? (
-                        <>
-                          <LinkIcon /> Copy link
-                        </>
-                      ) : isLoading ? (
-                        <>
-                          <Loader size={2} />
-                          Creating
-                        </>
-                      ) : (
-                        <>
-                          <LinkIcon />
-                          Create link
-                        </>
-                      )}
-                    </Button>
-                  </form>
+                  <Button className="rounded-full font-semibold" onClick={() => handleShare()}>
+                    {isCopied ? (
+                      <>
+                        <ClipboardIcon /> Copied
+                      </>
+                    ) : shareToken ? (
+                      <>
+                        <LinkIcon /> Copy link
+                      </>
+                    ) : isLoading ? (
+                      <>
+                        <Loader size={2} />
+                        Creating
+                      </>
+                    ) : (
+                      <>
+                        <LinkIcon />
+                        Create link
+                      </>
+                    )}
+                  </Button>
                 </div>
                 {shareToken ? (
                   <TooltipWrapper delayDuration={1000} tooltip="Remove sharing">

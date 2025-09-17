@@ -53,63 +53,6 @@ export const deleteChat = async (id: string) => {
   }
 }
 
-export const shareChat = async (id: string) => {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    throw new Error("User not found")
-  }
-
-  const { data: sharedChat } = await supabase
-    .from("chats")
-    .select("share_token")
-    .eq("id", id)
-    .eq("created_by", user.id)
-    .single()
-
-  if (sharedChat?.share_token) {
-    return sharedChat.share_token
-  }
-
-  const { data, error } = await supabase
-    .from("chats")
-    .update({
-      share_token: uuidv4(),
-      share_created_at: new Date().toISOString(),
-    })
-    .eq("id", id)
-    .eq("created_by", user.id)
-    .select("share_token")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  if (!data?.share_token) {
-    throw new Error("Failed to share the chat")
-  }
-
-  return data.share_token
-}
-
-export const getSharedTokenByChatId = async (chatId: string) => {
-  const supabase = await createClient()
-
-  const { data } = await supabase
-    .from("chats")
-    .select("share_token")
-    .eq("id", chatId)
-    .not("share_token", "is", null)
-    .single()
-
-  return data?.share_token
-}
-
 export const getChatByShareToken = async (shareToken: string) => {
   const supabase = await createClient()
 
@@ -160,33 +103,4 @@ export const getSharedChats = async () => {
   }
 
   return data
-}
-
-export const deleteSharedChat = async (id: string) => {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    throw new Error("User not found")
-  }
-
-  const { data, error } = await supabase
-    .from("chats")
-    .update({
-      share_token: null,
-      share_created_at: null,
-    })
-    .eq("id", id)
-    .eq("created_by", user.id)
-    .select("id")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data?.id
 }
