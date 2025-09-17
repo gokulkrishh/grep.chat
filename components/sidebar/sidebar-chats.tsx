@@ -64,7 +64,7 @@ export const SidebarChats = () => {
       {chats.map((chat, index) => (
         <SidebarMenuItem
           className={cn(`group/chat-item flex w-full list-none items-center rounded-md`, {
-            "bg-sidebar-accent": chatId === chat.id,
+            "bg-sidebar-accent/70": chatId === chat.id,
           })}
           key={chat.id}
         >
