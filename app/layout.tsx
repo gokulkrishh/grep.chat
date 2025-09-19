@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/contexts/theme-provider"
 import Header from "@/components/header"
 import { AppSidebar } from "@/components/sidebar/sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 
 import "./globals.css"
 
@@ -22,6 +23,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://grep.chat"),
   title: "grep.chat",
   description: "Choose your AI. Ask anything. Get answers that matter.",
   icons: [
@@ -98,6 +100,7 @@ export default async function RootLayout({
           </SidebarProvider>
         </ThemeProvider>
         <Analytics />
+        <Toaster position="top-center" />
       </body>
     </html>
   )
