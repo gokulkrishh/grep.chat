@@ -44,7 +44,7 @@ export default function ChatInputModels({ model, setModel }: Props) {
         onClick={() => setModel(modelOption.id)}
       >
         <TooltipWrapper
-          delayDuration={500}
+          delayDuration={200}
           sideOffset={4}
           side="top"
           className="w-full max-w-80"
