@@ -29,13 +29,13 @@ export const metadata: Metadata = {
       rel: "icon",
       type: "image/svg+xml",
       media: "(prefers-color-scheme: light)",
-      url: "/favicon-light.svg",
+      url: "/logo-dark.svg",
     },
     {
       rel: "icon",
       type: "image/svg+xml",
       media: "(prefers-color-scheme: dark)",
-      url: "/favicon-dark.svg",
+      url: "/logo-light.svg",
     },
   ],
 }
