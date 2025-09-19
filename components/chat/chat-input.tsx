@@ -116,7 +116,10 @@ export default function ChatInput({
         <PromptInputActions className="justify-end">
           <PromptInputAction tooltip="Attach files">
             <Button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                toast.error("Attaching files support is coming soon")
+                // fileInputRef.current?.click()
+              }}
               variant={files?.length ? "secondary" : "ghost"}
               size="icon"
               className="rounded-full"
