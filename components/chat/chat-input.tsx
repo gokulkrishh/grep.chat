@@ -4,9 +4,12 @@ import { useRef, useState } from "react"
 
 import { usePathname } from "next/navigation"
 
+import { toast } from "sonner"
+
 import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { useUser } from "@/hooks/use-user"
 
 import { useChats } from "../contexts/chats-provider"
 import { ArrowUpIcon, GlobeIcon, PaperClipIcon, SquareIcon } from "../icons"
@@ -29,6 +32,7 @@ export default function ChatInput({
   const [files, setFiles] = useState<File[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { refreshChats } = useChats()
+  const { user } = useUser()
 
   const isHomePath = pathname === "/"
   const isStreaming = props.status === "streaming"
@@ -44,6 +48,11 @@ export default function ChatInput({
   }
 
   const handleSubmit = async () => {
+    if (!user) {
+      toast.error("Please sign in to chat")
+      return
+    }
+
     if (isStreaming) {
       props.stop()
       return
