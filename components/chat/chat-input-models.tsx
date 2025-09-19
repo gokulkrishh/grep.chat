@@ -26,7 +26,7 @@ const autoModels = [
   } as unknown as (typeof models)[number],
 ]
 
-const popular = [...allModels].sort((a, b) => b.created - a.created).slice(0, 5)
+const popular = [...allModels].sort((a, b) => b.created - a.created).slice(0, 3)
 
 type Props = Pick<UseChatReturnType, "model" | "setModel">
 
@@ -55,8 +55,8 @@ export default function ChatInputModels({ model, setModel }: Props) {
             </div>
           }
         >
-          <p className="flex w-full items-center justify-between">
-            <span className="flex w-full truncate text-left font-normal capitalize">
+          <p className="flex w-full min-w-0 items-center justify-between">
+            <span className="min-w-0 flex-1 truncate text-left font-normal capitalize">
               {modelOption.name}
             </span>
             <CheckmarkIcon
