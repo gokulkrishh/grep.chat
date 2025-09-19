@@ -66,7 +66,6 @@ export async function POST(request: Request) {
       model,
       reasoning,
       webSearch,
-      title,
       regenerateMessageId,
     }: RequestBody = await request.json()
 
@@ -80,10 +79,6 @@ export async function POST(request: Request) {
 
     if (!chatId) {
       return NextResponse.json({ error: "chatId is missing" }, { status: 400 })
-    }
-
-    if (title) {
-      await ensureChat(supabase, chatId, title)
     }
 
     const cacheId = `${chatId}${user.id}`
