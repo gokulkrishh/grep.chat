@@ -11,6 +11,7 @@ import {
 } from "ai"
 import { v4 as uuidv4 } from "uuid"
 
+import { ensureChat } from "@/actions/chat"
 import { systemPrompt } from "@/data/prompt"
 import { Reasoning, autoModel } from "@/hooks/use-chat"
 import { invalidateMessagesCache } from "@/lib/redis/cache"
@@ -51,6 +52,7 @@ type RequestBody = {
   model: string
   reasoning: Reasoning
   webSearch: boolean
+  title?: string
   regenerateMessageId?: string
 }
 
@@ -64,6 +66,7 @@ export async function POST(request: Request) {
       model,
       reasoning,
       webSearch,
+      title,
       regenerateMessageId,
     }: RequestBody = await request.json()
 
@@ -77,6 +80,10 @@ export async function POST(request: Request) {
 
     if (!chatId) {
       return NextResponse.json({ error: "chatId is missing" }, { status: 400 })
+    }
+
+    if (title) {
+      await ensureChat(supabase, chatId, title)
     }
 
     const cacheId = `${chatId}${user.id}`
@@ -167,7 +174,7 @@ export async function POST(request: Request) {
         const { error } = await supabase.from("messages").insert({
           id: lastMessage.id,
           chat_id: chatId,
-          user_id: user.id,
+          user_id: null, // AI messages should have null user_id
           model,
           role: "assistant",
           parts: lastMessage?.parts as Json,

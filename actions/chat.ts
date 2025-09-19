@@ -2,11 +2,16 @@
 
 import { redirect } from "next/navigation"
 
+import { SupabaseClient } from "@supabase/supabase-js"
+
 import { createClient } from "@/lib/supabase/server"
+import { Database } from "@/supabase/database.types"
 
-export const ensureChat = async (id: string, title?: string) => {
-  const supabase = await createClient()
-
+export const ensureChat = async (
+  supabase: SupabaseClient<Database>,
+  id: string,
+  title?: string,
+) => {
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -19,7 +24,7 @@ export const ensureChat = async (id: string, title?: string) => {
     .from("chats")
     .select("id")
     .eq("id", id)
-    .eq("created_by", user?.id)
+    .eq("created_by", user.id)
     .single()
 
   if (existingChat) {
@@ -28,9 +33,16 @@ export const ensureChat = async (id: string, title?: string) => {
 
   await supabase
     .from("chats")
-    .insert({ id, title: title ?? "New Chat", created_by: user.id })
+    .upsert(
+      {
+        id,
+        title: title ?? "New Chat",
+        created_by: user.id,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "id", ignoreDuplicates: false },
+    )
     .select("id")
-    .single()
 }
 
 export const deleteChat = async (id: string) => {

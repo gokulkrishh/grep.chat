@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 
 import { toast } from "sonner"
 
-import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useUser } from "@/hooks/use-user"
@@ -67,20 +66,27 @@ export default function ChatInput({
 
       const chatId = props.id
 
-      sendMessage(
+      await sendMessage(
         { role: "user", parts: [{ type: "text", text }] },
-        { body: { reasoning: props.reasoning, webSearch, model: props.model, id: chatId } },
+        {
+          body: {
+            reasoning: props.reasoning,
+            webSearch,
+            model: props.model,
+            id: chatId,
+            title: isHomePath ? text?.slice(0, 40) : undefined,
+          },
+        },
       )
 
       if (isHomePath) {
-        await ensureChat(chatId, text?.slice(0, 40))
+        refreshChats()
         redirectToChat(chatId)
       }
     } catch (error) {
       console.log("Error while submitting message", error)
     } finally {
       setFiles([])
-      refreshChats()
     }
   }
 
