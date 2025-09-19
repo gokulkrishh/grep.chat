@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import {
   DropdownMenu,
@@ -6,16 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { createClient } from "@/lib/supabase/server"
 
+import { GitIcon } from "../icons"
 import SettingsDialog from "../settings/settings-dialog"
 import SignOut from "../signout"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { SidebarMenuButton } from "../ui/sidebar"
-import SidebarTheme from "./sidebar-theme"
 
 export default async function SidebarProfile() {
   const supabase = await createClient()
@@ -66,6 +66,15 @@ export default async function SidebarProfile() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+
+        <DropdownMenuItem className="flex items-center gap-2" asChild>
+          <Link target="_blank" href="https://github.com/gokulkrishh/grep.chat">
+            <GitIcon className="size-4.5 shrink-0" />
+            <div className="flex w-full flex-col truncate text-left">
+              <span className="text-primary truncate text-sm font-medium">Github</span>
+            </div>
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuItem className="flex items-center gap-2" asChild>
           <SettingsDialog />

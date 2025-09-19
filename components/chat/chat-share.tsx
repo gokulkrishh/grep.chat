@@ -132,8 +132,8 @@ export default function ChatShare() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-full" variant="ghost" type="button">
-          <ShareIcon className="size-5" /> <span className="hidden md:block">Share</span>
+        <Button size="sm" className="rounded-full" variant="ghost" type="button">
+          <ShareIcon className="size-4.5" /> <span className="hidden md:block">Share</span>
         </Button>
       </DialogTrigger>
       <DialogContent showCloseButton={!isSharedTokenLoading}>
