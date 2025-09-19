@@ -21,7 +21,7 @@ A Next.js 15 app that lets you chat with models via OpenRouter, using Supabase f
 npm install
 # or
 yarn
-# or
+# or``
 pnpm install
 # or
 bun install
@@ -131,3 +131,5 @@ supabase/
 ---
 
 Feel free to open issues/PRs to improve DX or docs.
+
+### MIT LICENSED
