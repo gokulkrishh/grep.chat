@@ -38,6 +38,27 @@ export const metadata: Metadata = {
       url: "/logo-light.svg",
     },
   ],
+  openGraph: {
+    title: "grep.chat",
+    description: "Choose your AI. Ask anything. Get answers that matter.",
+    url: "https://grep.chat",
+    siteName: "grep.chat",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "grep.chat - Choose your AI. Ask anything. Get answers that matter.",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "grep.chat",
+    description: "Choose your AI. Ask anything. Get answers that matter.",
+    images: ["/og.png"],
+  },
 }
 
 export const viewport: Viewport = {
