@@ -4,6 +4,8 @@ import { useState } from "react"
 
 import { useTheme } from "next-themes"
 
+import { deleteAllChats } from "@/actions/chats"
+
 import { SettingsIcon, UserIcon } from "../icons"
 import {
   AlertDialogContent as AlertContent,
@@ -35,6 +37,7 @@ const SettingsDialog: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>("general")
   const { theme, setTheme } = useTheme()
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeletingAllChats, setIsDeletingAllChats] = useState(false)
 
   const handleDeleteAccount = async () => {
     try {
@@ -50,6 +53,18 @@ const SettingsDialog: React.FC = () => {
       console.log("Error deleting account", message)
     } finally {
       setIsDeleting(false)
+    }
+  }
+
+  const handleDeleteAllChats = async () => {
+    try {
+      setIsDeletingAllChats(true)
+      await deleteAllChats()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error"
+      console.log("Error deleting all chats", message)
+    } finally {
+      setIsDeletingAllChats(false)
     }
   }
 
@@ -125,6 +140,41 @@ const SettingsDialog: React.FC = () => {
               <div className="flex flex-col gap-2">
                 <h2 className="text-lg font-semibold">Account</h2>
                 <SelectSeparator />
+
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <p className="text-sm font-medium">Delete all chats</p>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isDeletingAllChats}
+                        className="text-destructive border-destructive! hover:bg-sidebar-accent! hover:text-destructive! w-fit rounded-full bg-transparent!"
+                      >
+                        Delete all chats
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertContent>
+                      <AlertDialogHeader>
+                        <AlertTitle>Delete all chats</AlertTitle>
+                        <AlertDialogDescription>
+                          This action is irreversible and will permanently delete all your chats.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeletingAllChats}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          variant="destructive"
+                          onClick={handleDeleteAllChats}
+                          disabled={isDeletingAllChats}
+                        >
+                          {isDeletingAllChats ? "Deleting..." : "Delete"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertContent>
+                  </AlertDialog>
+                </div>
 
                 <div className="mt-2 flex items-center justify-between gap-3">
                   <p className="text-sm font-medium">Delete Account</p>
