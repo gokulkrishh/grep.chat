@@ -41,12 +41,12 @@ export const SidebarChats = () => {
     try {
       setIsLoading(true)
       await deleteChat(deletedChatId)
+      refreshChats()
       setDeletedChatId(null)
       if (chatId) {
         router.push("/")
       }
     } finally {
-      refreshChats()
       setOpen(false)
       setIsLoading(false)
     }
