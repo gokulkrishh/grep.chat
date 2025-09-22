@@ -3,6 +3,7 @@ import prettyMilliseconds from "pretty-ms"
 
 import { ChartIcon, TimeIcon } from "@/components/icons"
 import TooltipWrapper from "@/components/tooltip-wrapper"
+import models from "@/data/models"
 
 import { Button } from "../ui/button"
 
@@ -11,7 +12,11 @@ export const formatMs = (ms?: number) => {
   return prettyMilliseconds(ms, { compact: true })
 }
 
-export default function MessageInfo({ message }: { message: UIMessage }) {
+type MessageMetadata = UIMessage & {
+  model: (typeof models)[number]["id"]
+}
+
+export default function MessageInfo({ message }: { message: MessageMetadata }) {
   const metadata = message.metadata as {
     started: number
     finished: number
@@ -30,11 +35,13 @@ export default function MessageInfo({ message }: { message: UIMessage }) {
     return null
   }
 
+  const modelName = message.model ? models.find((m) => m.id === message.model)?.name : "Auto"
+
   return (
     <>
       <TooltipWrapper
         tooltip={
-          <div className="flex w-28 flex-col gap-1 py-1">
+          <div className="flex min-w-28 flex-col gap-1 py-1">
             <h4 className="mb-0.5 text-xs font-semibold">Tokens usage</h4>
             <p className="text-xs">
               <span className="font-semibold">Input: </span>
@@ -53,6 +60,10 @@ export default function MessageInfo({ message }: { message: UIMessage }) {
             <p className="text-xs">
               <span className="font-semibold">Total: </span>
               <span className="tabular-nums">{usage?.totalTokens ?? 0}</span>
+            </p>
+            <p className="text-xs">
+              <span className="font-semibold">Model: </span>
+              <span className="tabular-nums">{modelName}</span>
             </p>
           </div>
         }

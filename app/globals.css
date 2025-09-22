@@ -393,6 +393,32 @@
     .not-prose {
       margin: 1.5em 0;
     }
+
+    a {
+      font-weight: var(--font-weight-medium);
+      color: var(--color-primary);
+      text-decoration-line: underline;
+      text-decoration-skip-ink: auto;
+      text-decoration-style: dotted;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2.5px;
+    }
+
+    a.data-footnote-backref {
+      text-decoration-line: none;
+    }
+
+    sup a {
+      text-decoration-line: none;
+
+      &::after {
+        content: "]";
+      }
+
+      &::before {
+        content: "[";
+      }
+    }
   }
 
   .prose-sm {
