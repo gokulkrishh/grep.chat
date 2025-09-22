@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import { useChat as useAiSdkChat } from "@ai-sdk/react"
 
@@ -16,13 +16,12 @@ export type Reasoning = "low" | "medium" | "high" | null
 export const autoModel = "openrouter/auto"
 
 export const useChat = ({ id, initialMessages }: Props) => {
-  const chatId = useMemo(() => id ?? uuidv4(), [id])
   const [model, setModel] = useState(autoModel)
   const [webSearch, setWebSearch] = useState(false)
   const [reasoning, setReasoning] = useState<Reasoning>(null)
 
   const chat = useAiSdkChat({
-    id: chatId,
+    id,
     messages: initialMessages,
     generateId: () => uuidv4(),
     transport: new DefaultChatTransport({
@@ -42,27 +41,32 @@ export const useChat = ({ id, initialMessages }: Props) => {
     }),
   })
 
+  const resetChat = useCallback(() => {
+    chat.stop()
+    chat.clearError()
+    chat.setMessages([])
+  }, [chat])
+
   useEffect(() => {
-    const handleResetChat = () => {
-      chat.setMessages([])
-    }
+    const handleResetChat = resetChat
 
     document.addEventListener("reset-chat", handleResetChat)
 
     return () => {
       document.removeEventListener("reset-chat", handleResetChat)
     }
-  }, [chat])
+  }, [chat, resetChat])
 
   return {
     ...chat,
-    id: chatId,
+    id,
     model,
     setModel,
     webSearch,
     setWebSearch,
     reasoning,
     setReasoning,
+    resetChat,
   }
 }
 

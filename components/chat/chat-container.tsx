@@ -11,7 +11,7 @@ import ChatMessages from "./chat-messages"
 import ChatWelcome from "./chat-welcome"
 
 type Props = {
-  id?: string
+  id: string
   initialMessages?: UIMessage[]
 }
 

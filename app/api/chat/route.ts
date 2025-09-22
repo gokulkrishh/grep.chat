@@ -11,7 +11,6 @@ import {
 } from "ai"
 import { v4 as uuidv4 } from "uuid"
 
-import { ensureChat } from "@/actions/chat"
 import { systemPrompt } from "@/data/prompt"
 import { Reasoning, autoModel } from "@/hooks/use-chat"
 import { invalidateMessagesCache } from "@/lib/redis/cache"
