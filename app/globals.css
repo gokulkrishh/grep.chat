@@ -122,6 +122,17 @@
     scrollbar-width: thin;
     scrollbar-color: var(--ring) var(--background);
   }
+
+  /* Prevent text selection during drag operations */
+  button,
+  [role="button"],
+  [data-slot="sidebar-rail"],
+  [data-slot="sidebar-menu-action"] {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
 }
 
 @keyframes typing {
