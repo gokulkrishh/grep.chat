@@ -341,7 +341,7 @@
     }
 
     ol {
-      margin-left: 1em;
+      margin-left: 2em;
       list-style-type: decimal;
     }
 
@@ -388,6 +388,10 @@
     tbody td {
       padding: 0.625em 0.75em;
       vertical-align: middle;
+    }
+
+    .not-prose {
+      margin: 1.5em 0;
     }
   }
 
