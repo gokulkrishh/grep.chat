@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 import { deleteAllChats } from "@/actions/chats"
 
 import { SettingsIcon, UserIcon } from "../icons"
+import { Loader } from "../loader"
 import {
   AlertDialogContent as AlertContent,
   AlertDialog,
@@ -169,7 +170,8 @@ const SettingsDialog: React.FC = () => {
                           onClick={handleDeleteAllChats}
                           disabled={isDeletingAllChats}
                         >
-                          {isDeletingAllChats ? "Deleting..." : "Delete"}
+                          {isDeletingAllChats ? <Loader /> : null}
+                          Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertContent>
@@ -205,7 +207,8 @@ const SettingsDialog: React.FC = () => {
                           onClick={handleDeleteAccount}
                           disabled={isDeleting}
                         >
-                          {isDeleting ? "Deleting..." : "Delete"}
+                          {isDeleting ? <Loader /> : null}
+                          Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertContent>

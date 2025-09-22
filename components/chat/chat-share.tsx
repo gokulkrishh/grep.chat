@@ -182,8 +182,8 @@ export default function ChatShare() {
                       </>
                     ) : isLoading ? (
                       <>
-                        <Loader size={2} />
-                        Creating
+                        <Loader />
+                        Create link
                       </>
                     ) : (
                       <>
