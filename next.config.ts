@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "t0.gstatic.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 }
