@@ -139,7 +139,12 @@ export async function POST(request: Request) {
         ...(reasoning && { reasoning: { enabled: true, effort: reasoning } }),
         ...(webSearch && {
           plugins: [
-            { id: "web", max_results: { high: 5, medium: 3, low: 1 }[reasoning ?? "low"] ?? 1 },
+            {
+              id: "web",
+              max_results: { high: 5, medium: 3, low: 1 }[reasoning ?? "low"] ?? 1,
+              search_prompt:
+                "You are a helpful assistant that can search the web for information. You can use the following tools to search the web: Google, DuckDuckGo, Bing, Yahoo, and Ask. Always include the source of the information in your response.",
+            },
           ],
         }),
       }),

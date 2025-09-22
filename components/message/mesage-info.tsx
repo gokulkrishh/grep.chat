@@ -61,7 +61,7 @@ export default function MessageInfo({ message }: { message: MessageMetadata }) {
               <span className="font-semibold">Total: </span>
               <span className="tabular-nums">{usage?.totalTokens ?? 0}</span>
             </p>
-            {modelName && (
+            {message.model && (
               <p className="text-xs">
                 <span className="font-semibold">Model: </span>
                 <span className="tabular-nums">{modelName}</span>
