@@ -13,7 +13,7 @@ export const formatMs = (ms?: number) => {
 }
 
 type MessageMetadata = UIMessage & {
-  model: (typeof models)[number]["id"]
+  model?: (typeof models)[number]["id"]
 }
 
 export default function MessageInfo({ message }: { message: MessageMetadata }) {
