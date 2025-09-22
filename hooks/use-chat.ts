@@ -8,7 +8,7 @@ import { DefaultChatTransport, UIMessage } from "ai"
 import { v4 as uuidv4 } from "uuid"
 
 type Props = {
-  id?: string
+  id: string
   initialMessages?: UIMessage[]
 }
 
