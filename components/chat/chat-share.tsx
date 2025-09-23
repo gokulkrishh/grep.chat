@@ -23,6 +23,7 @@ import {
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
+import GithubLink from "../github"
 import TooltipWrapper from "../tooltip-wrapper"
 
 export default function ChatShare() {
@@ -126,7 +127,7 @@ export default function ChatShare() {
   }
 
   if (!isChatIdPath) {
-    return null
+    return <GithubLink />
   }
 
   return (

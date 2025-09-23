@@ -43,7 +43,7 @@ export const SidebarChats = () => {
       await deleteChat(deletedChatId)
       refreshChats()
       setDeletedChatId(null)
-      if (chatId) {
+      if (chatId === deletedChatId) {
         router.push("/")
       }
     } finally {
