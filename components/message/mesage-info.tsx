@@ -35,7 +35,10 @@ export default function MessageInfo({ message }: { message: MessageMetadata }) {
     return null
   }
 
-  const modelName = message.model ? models.find((m) => m.id === message.model)?.name : "Auto"
+  const modelName =
+    message.model === "openrouter/auto"
+      ? "Auto"
+      : models.find((m) => m.id === message.model)?.name || "Auto"
 
   return (
     <>
