@@ -62,7 +62,7 @@ const latestModels = [...allModels]
     const threeMonthsAgo = Date.now() / 1000 - 60 * 60 * 24 * 90
     return model.created >= threeMonthsAgo && !freeModelIds.has(model.id)
   })
-  .slice(0, 3)
+  .slice(0, 4)
 
 // Multimodal models - support image input, excluding free models
 const multimodalModels = allModels.filter(

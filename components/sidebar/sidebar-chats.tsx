@@ -70,7 +70,7 @@ export const SidebarChats = () => {
           })}
           key={chat.id}
         >
-          <SidebarMenuButton className="inline-flex w-full pr-0.5" asChild>
+          <SidebarMenuButton className="inline-flex w-full gap-0 pr-0" asChild>
             <Link
               prefetch={index < 5}
               onClick={() => {
