@@ -32,8 +32,10 @@ const getCompanyFavicon = (companyName: string): string | null => {
     Qwen: "https://qwen.ai",
   }
 
-  const website = companyWebsites[companyName]
-  if (!website) return null
+  let website = companyWebsites[companyName]
+  if (!website) {
+    website = "https://openrouter.ai"
+  }
 
   // Use Google's favicon service
   return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(website)}&size=32`
@@ -48,8 +50,31 @@ const freeModels = models.filter(
 const autoModels = [
   {
     id: autoModel,
+    canonical_slug: autoModel,
+    hugging_face_id: null,
     name: "Auto",
-    description: "Auto-select the best model for the task.",
+    created: 1699401600,
+    description:
+      "Openrouter.ai processes your prompt through a meta-model, directing it to the best-suited model for optimal output.",
+    context_length: 2000000,
+    architecture: {
+      modality: "text-\u003Etext",
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+      tokenizer: "Router",
+      instruct_type: null,
+    },
+    pricing: {
+      prompt: "-1",
+      completion: "-1",
+    },
+    top_provider: {
+      context_length: null,
+      max_completion_tokens: null,
+      is_moderated: false,
+    },
+    per_request_limits: null,
+    supported_parameters: [],
   } as unknown as (typeof models)[number],
 ]
 
@@ -95,10 +120,10 @@ export default function ChatInputModels({ model, setModel }: Props) {
             delayDuration={500}
             sideOffset={4}
             side="top"
-            className="w-full max-w-80"
+            className="w-full max-w-120"
             tooltip={
               <div className="flex max-w-80 flex-col gap-1 py-1">
-                <h4 className="text-sm font-medium">{modelOption.name}</h4>
+                <h4 className="text-sm font-semibold">{modelOption.name}</h4>
                 <p className="text-sm">{modelOption.description}</p>
               </div>
             }
