@@ -23,7 +23,7 @@ export default function ChatCodeBlockCopy({ code, language }: CodeBlockCopyProps
   }
 
   return (
-    <div className="top-0 z-12 flex w-full items-center justify-between gap-2 bg-neutral-900 py-2 pr-1 pl-4 md:sticky">
+    <div className="top-0 z-14 flex w-full items-center justify-between gap-2 bg-neutral-900 py-2 pr-1 pl-4 md:sticky">
       <span className="text-sm text-white capitalize">{language}</span>
       <button
         className="flex cursor-pointer items-center gap-2 px-2 py-1 text-sm text-white"
