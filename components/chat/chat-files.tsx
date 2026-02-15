@@ -1,6 +1,4 @@
-import { useEffect, useMemo } from "react"
-
-import Image from "next/image"
+import { useEffect, useState } from "react"
 
 import { FileIcon, XIcon } from "../icons"
 import { Button } from "../ui/button"
@@ -20,17 +18,27 @@ const isImageFile = (file: File): boolean => {
   return file.type.startsWith("image/")
 }
 
-const FilePreview = ({ file, index, onRemove }: { file: File; index: number; onRemove: (index: number) => void }) => {
-  const previewUrl = useMemo(() => {
-    if (!isImageFile(file)) return null
-    return URL.createObjectURL(file)
-  }, [file])
+const FilePreview = ({
+  file,
+  index,
+  onRemove,
+}: {
+  file: File
+  index: number
+  onRemove: (index: number) => void
+}) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!isImageFile(file)) return
+
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      URL.revokeObjectURL(url)
     }
-  }, [previewUrl])
+  }, [file])
 
   return (
     <div
@@ -38,14 +46,8 @@ const FilePreview = ({ file, index, onRemove }: { file: File; index: number; onR
       key={`${file.name}-${index}`}
     >
       {previewUrl ? (
-        <Image
-          src={previewUrl}
-          alt={file.name}
-          width={32}
-          height={32}
-          className="size-8 shrink-0 rounded object-cover"
-          unoptimized
-        />
+        /* eslint-disable-next-line @next/next/no-img-element -- blob: URLs are local previews, not optimizable by next/image */
+        <img src={previewUrl} alt={file.name} className="size-8 shrink-0 rounded object-cover" />
       ) : (
         <FileIcon className="text-muted-foreground size-4 shrink-0" />
       )}
@@ -80,7 +82,12 @@ export default function ChatFiles({ files, handleRemoveFile }: Props) {
   return (
     <div className="flex flex-row flex-wrap gap-2 p-1">
       {files.map((file, index) => (
-        <FilePreview key={`${file.name}-${index}`} file={file} index={index} onRemove={handleRemoveFile} />
+        <FilePreview
+          key={`${file.name}-${index}`}
+          file={file}
+          index={index}
+          onRemove={handleRemoveFile}
+        />
       ))}
     </div>
   )
