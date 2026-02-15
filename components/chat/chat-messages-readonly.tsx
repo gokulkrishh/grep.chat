@@ -1,5 +1,6 @@
 import { UIMessage } from "@ai-sdk/react"
 
+import MessageAttachments from "@/components/message/message-attachments"
 import MessageCopy from "@/components/message/message-copy"
 import MessageScrollButton from "@/components/message/message-scroll-button"
 import { ChatContainerContent, ChatContainerRoot } from "@/components/prompt-kit/chat-container"
@@ -48,9 +49,13 @@ export default function ChatMessagesReadonly({ messages }: Props) {
                   </div>
                 ) : (
                   <div className="group flex w-full flex-col items-end gap-2">
-                    <MessageContent className="bg-muted text-primary w-fit max-w-[85%] rounded-3xl sm:max-w-[75%]">
-                      {textParts}
-                    </MessageContent>
+                    <MessageAttachments message={message} />
+
+                    {textParts && (
+                      <MessageContent className="bg-muted text-primary w-fit max-w-[85%] rounded-3xl sm:max-w-[75%]">
+                        {textParts}
+                      </MessageContent>
+                    )}
 
                     <MessageActions>
                       <MessageCopy message={message} />
