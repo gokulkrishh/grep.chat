@@ -18,11 +18,11 @@ export async function DELETE() {
     }
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const serviceKey = process.env.SUPABASE_SECRET_KEY
 
     if (!url || !serviceKey) {
       return NextResponse.json(
-        { error: "Server not configured: SUPABASE_SERVICE_ROLE_KEY or URL missing" },
+        { error: "Server not configured: SUPABASE_SECRET_KEY or URL missing" },
         { status: 500 },
       )
     }
