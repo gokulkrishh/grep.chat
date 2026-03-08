@@ -23,7 +23,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
-    reactCompiler: true,
     optimizePackageImports: [
       "@radix-ui/react-alert-dialog",
       "@radix-ui/react-avatar",
