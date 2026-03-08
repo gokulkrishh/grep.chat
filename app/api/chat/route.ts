@@ -151,7 +151,7 @@ export async function POST(request: Request) {
       experimental_transform: smoothStream({ chunking: "word" }),
       system: systemPrompt,
       stopWhen: stepCountIs(5),
-      messages: convertToModelMessages(originalMessages),
+      messages: await convertToModelMessages(originalMessages),
       onError: (error) => {
         console.error("Error communicating with AI", error)
       },
