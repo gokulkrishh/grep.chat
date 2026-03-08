@@ -34,8 +34,12 @@ type Metadata = {
     inputTokens: number
     outputTokens: number
     totalTokens: number
-    reasoningTokens: number
-    cachedInputTokens: number
+    inputTokenDetails?: {
+      cacheReadTokens?: number
+    }
+    outputTokenDetails?: {
+      reasoningTokens?: number
+    }
   }
   finished: number
   started: number
