@@ -23,8 +23,13 @@ export default function MessageInfo({ message }: { message: MessageMetadata }) {
     usage: {
       inputTokens: number
       outputTokens: number
-      reasoningTokens: number
       totalTokens: number
+      inputTokenDetails?: {
+        cacheReadTokens?: number
+      }
+      outputTokenDetails?: {
+        reasoningTokens?: number
+      }
     }
   }
 
@@ -54,10 +59,10 @@ export default function MessageInfo({ message }: { message: MessageMetadata }) {
               <span className="font-semibold">Output: </span>
               <span className="tabular-nums">{usage?.outputTokens ?? 0}</span>
             </p>
-            {usage?.reasoningTokens ? (
+            {usage?.outputTokenDetails?.reasoningTokens ? (
               <p className="text-xs">
                 <span className="font-semibold">Reasoning: </span>
-                <span className="tabular-nums">{usage?.reasoningTokens ?? 0}</span>
+                <span className="tabular-nums">{usage?.outputTokenDetails?.reasoningTokens ?? 0}</span>
               </p>
             ) : null}
             <p className="text-xs">

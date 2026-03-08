@@ -41,8 +41,8 @@ Copy `[env.example](./env.example)` to `.env.local` and fill in:
 ```bash
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 NEXT_PUBLIC_SUPABASE_URL=""                 # From Supabase -> Project Settings -> API
-NEXT_PUBLIC_SUPABASE_ANON_KEY=""            # From Supabase -> Project Settings -> API
-SUPABASE_SERVICE_ROLE_KEY=""                # From Supabase -> Project Settings -> API (server-only)
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=""     # From Supabase -> Project Settings -> API
+SUPABASE_SECRET_KEY=""                      # From Supabase -> Project Settings -> API (server-only)
 OPENROUTER_API_KEY=""                       # From OpenRouter API keys
 REDIS_URL=""                                # Optional, e.g. redis://default:password@host:port
 SUPABASE_PROJECT_ID=""                      # Optional, used by `npm run update-types`
@@ -50,7 +50,7 @@ SUPABASE_PROJECT_ID=""                      # Optional, used by `npm run update-
 
 Important:
 
-- Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client. Set it only in server-side environments (e.g., Vercel Project Settings – Environment Variables).
+- Never expose `SUPABASE_SECRET_KEY` to the client. Set it only in server-side environments (e.g., Vercel Project Settings – Environment Variables).
 - `NEXT_PUBLIC_*` values are safe to be exposed to the client.
 
 ## Database schema
@@ -97,10 +97,10 @@ Implementation references:
 A Delete Account control lives in Settings → Account. This calls:
 
 - `DELETE /api/account` → implemented in `app/api/account/route.ts`.
-- It verifies the current session and deletes the user using the Supabase Admin API (requires `SUPABASE_SERVICE_ROLE_KEY`).
+- It verifies the current session and deletes the user using the Supabase Admin API (requires `SUPABASE_SECRET_KEY`).
 - Deleting a user cascades to related rows based on the schema and foreign key constraints.
 
-Make sure `SUPABASE_SERVICE_ROLE_KEY` is configured on the server (e.g., Vercel), not exposed to the client.
+Make sure `SUPABASE_SECRET_KEY` is configured on the server (e.g., Vercel), not exposed to the client.
 
 ## Project layout (high level)
 
@@ -124,7 +124,7 @@ supabase/
 ## Deployment
 
 - Recommended: Vercel
-- Set all env vars in the project settings (including `SUPABASE_SERVICE_ROLE_KEY`).
+- Set all env vars in the project settings (including `SUPABASE_SECRET_KEY`).
 - Add your site URL to `NEXT_PUBLIC_SITE_URL` accordingly.
 - Build with `npm run build` and run `npm start` (handled by Vercel automatically).
 
