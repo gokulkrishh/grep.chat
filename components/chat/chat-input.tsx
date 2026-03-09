@@ -10,9 +10,11 @@ import { ensureChat } from "@/actions/chat"
 import { UseChatReturnType } from "@/hooks/use-chat"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useUser } from "@/hooks/use-user"
+import { uploadChatFiles, validateFiles } from "@/lib/supabase/storage"
 
 import { useChats } from "../contexts/chats-provider"
 import { ArrowUpIcon, GlobeIcon, PaperClipIcon, SquareIcon } from "../icons"
+import { Loader } from "../prompt-kit/loader"
 import { PromptInput, PromptInputActions, PromptInputTextarea } from "../prompt-kit/prompt-input"
 import { PromptInputAction } from "../prompt-kit/prompt-input"
 import { Button } from "../ui/button"
@@ -30,6 +32,7 @@ export default function ChatInput({
   const isMobile = useIsMobile()
   const [text, setText] = useState("")
   const [files, setFiles] = useState<File[]>([])
+  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { refreshChats } = useChats()
   const { user } = useUser()
@@ -58,17 +61,53 @@ export default function ChatInput({
       return
     }
 
-    if (!text.trim()) {
+    if (!text.trim() && !files.length) {
       return
     }
 
     try {
+      const chatId = props.id
+      const messageText = text.trim()
+
+      const parts: Array<
+        | { type: "text"; text: string }
+        | { type: "file"; url: string; mediaType: string; filename: string }
+      > = []
+
+      // Upload files to Supabase Storage if any
+      if (files.length > 0) {
+        setIsUploading(true)
+
+        try {
+          const uploaded = await uploadChatFiles(files, chatId, user.id)
+
+          for (const file of uploaded) {
+            parts.push({
+              type: "file",
+              url: file.url,
+              mediaType: file.mediaType,
+              filename: file.name,
+            })
+          }
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Failed to upload files"
+          toast.error(message)
+          setIsUploading(false)
+          return
+        }
+
+        setIsUploading(false)
+      }
+
+      // Clear text only after uploads succeed
       setText("")
 
-      const chatId = props.id
+      if (messageText) {
+        parts.push({ type: "text", text: messageText })
+      }
 
       sendMessage(
-        { role: "user", parts: [{ type: "text", text }] },
+        { role: "user", parts },
         {
           body: {
             reasoning: props.reasoning,
@@ -80,7 +119,7 @@ export default function ChatInput({
       )
 
       if (isHomePath) {
-        await ensureChat(chatId, text?.slice(0, 40))
+        await ensureChat(chatId, messageText?.slice(0, 40))
         redirectToChat(chatId)
       }
     } catch (error) {
@@ -92,11 +131,23 @@ export default function ChatInput({
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const newFiles = Array.from(event.target.files)
+    if (!event.target.files) return
 
-      setFiles((prev) => [...prev, ...newFiles])
+    const newFiles = Array.from(event.target.files)
+    const allFiles = [...files, ...newFiles]
+    const validationError = validateFiles(allFiles)
+
+    if (validationError) {
+      toast.error(validationError)
+      // Reset file input so the same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = ""
+      return
     }
+
+    setFiles(allFiles)
+
+    // Reset file input so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
   const handleRemoveFile = (index: number) => {
@@ -123,22 +174,27 @@ export default function ChatInput({
         <PromptInputActions className="justify-end">
           <PromptInputAction tooltip="Attach files">
             <Button
-              onClick={() => {
-                toast.error("Attaching files support is coming soon")
-                // fileInputRef.current?.click()
-              }}
+              onClick={() => fileInputRef.current?.click()}
               variant={files?.length ? "secondary" : "ghost"}
               size="icon"
-              className="rounded-full"
+              className="relative rounded-full"
+              disabled={isUploading}
+              aria-label={files.length ? `Attach files (${files.length} selected)` : "Attach files"}
             >
               <input
                 ref={fileInputRef}
                 type="file"
                 multiple
+                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,text/plain,text/csv,text/markdown,application/json"
                 onChange={handleFileChange}
                 className="hidden"
               />
               <PaperClipIcon className="size-4" />
+              {files.length > 0 && (
+                <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full text-[10px] leading-none font-medium">
+                  {files.length}
+                </span>
+              )}
             </Button>
           </PromptInputAction>
 
@@ -158,15 +214,18 @@ export default function ChatInput({
         </PromptInputActions>
 
         <PromptInputActions className="justify-end">
-          <PromptInputAction tooltip={isLoading ? "Stop" : "Send"}>
+          <PromptInputAction tooltip={isUploading ? "Uploading…" : isLoading ? "Stop" : "Send"}>
             <Button
-              disabled={!isLoading && !text.trim()}
+              disabled={isUploading || (!isLoading && !text.trim() && !files.length)}
               variant="default"
               size="icon"
               className="rounded-full"
               onClick={handleSubmit}
+              aria-label={isUploading ? "Uploading files" : isLoading ? "Stop" : "Send message"}
             >
-              {isLoading ? (
+              {isUploading ? (
+                <Loader variant="pulse-dot" size="sm" />
+              ) : isLoading ? (
                 <SquareIcon className="size-4 fill-current" />
               ) : (
                 <ArrowUpIcon className="size-4" />

@@ -1,5 +1,6 @@
 "use client"
 
+import MessageAttachments from "@/components/message/message-attachments"
 import MessageInfo from "@/components/message/mesage-info"
 import MessageCopy from "@/components/message/message-copy"
 import MessageError from "@/components/message/message-error"
@@ -99,9 +100,13 @@ export default function ChatMessages({ regenerate, error, status, messages, ...p
                   </div>
                 ) : (
                   <div className="group flex w-full flex-col items-end gap-2">
-                    <MessageContent className="bg-muted text-primary w-fit max-w-[85%] rounded-3xl sm:max-w-[75%]">
-                      {textParts}
-                    </MessageContent>
+                    <MessageAttachments message={message} />
+
+                    {textParts && (
+                      <MessageContent className="bg-muted text-primary w-fit max-w-[85%] rounded-3xl sm:max-w-[75%]">
+                        {textParts}
+                      </MessageContent>
+                    )}
 
                     <MessageActions>
                       <MessageCopy message={message} />
